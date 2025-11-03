@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class GameLogic {
@@ -32,6 +31,13 @@ class GameLogic {
   void _saveHighScore() async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setInt('highScore', _highScore);
+  }
+
+  void resetHighScore() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('highScore', 0);
+    _highScore = 0;
+    onStateChanged();
   }
 
   void _loadOnboardingState() async {

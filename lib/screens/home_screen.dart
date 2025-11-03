@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:myapp/providers/game_provider.dart';
-import 'package:myapp/screens/leaderboard_screen.dart';
+import 'package:volt_rush/providers/game_provider.dart';
+import 'package:volt_rush/screens/leaderboard_screen.dart';
+import 'package:volt_rush/screens/settings_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -11,7 +12,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final game = Provider.of<GameProvider>(context);
     final String shareText =
-        'I just got a new high score of ${game.highScore} in Bust-a-Move! Can you beat it?';
+        'I just got a new high score of ${game.highScore} in Volt Rush! Can you beat it?';
 
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -49,14 +50,18 @@ class HomeScreen extends StatelessWidget {
                 ),
                 IconButton(
                   onPressed: () {
-                    // TODO: Implement settings screen
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const SettingsScreen()),
+                    );
                   },
                   icon: const Icon(Icons.settings, color: Colors.white),
                   tooltip: 'Settings',
                 ),
                 IconButton(
-                  onPressed: () {
-                    Share.share(shareText);
+                  onPressed: () async {
+                    await Share.share(shareText);
                   },
                   icon: const Icon(Icons.share, color: Colors.white),
                   tooltip: 'Share High Score',

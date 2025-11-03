@@ -7,24 +7,24 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:myapp/main.dart';
+import 'package:provider/provider.dart';
+import 'package:volt_rush/main.dart';
+import 'package:volt_rush/providers/game_provider.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
+  testWidgets('Starts on home screen and can start game', (WidgetTester tester) async {
     // Build our app and trigger a frame.
     await tester.pumpWidget(const MyApp());
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    // Verify that the game starts on the home screen.
+    expect(find.text('High Score'), findsOneWidget);
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
+    // Tap the play button and trigger a frame.
+    await tester.tap(find.text('Play'));
     await tester.pump();
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    // Verify that the game has started.
+    final GameProvider gameProvider = tester.element(find.byType(MaterialApp)).findAncestorWidgetOfExactType<MultiProvider>().p.first as GameProvider;
+    expect(gameProvider.gameState, GameState.playing);
   });
 }

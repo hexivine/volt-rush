@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:myapp/providers/game_provider.dart';
+import 'package:volt_rush/providers/game_provider.dart';
 
 class ShareScreen extends StatelessWidget {
   const ShareScreen({super.key});
@@ -22,7 +22,7 @@ class ShareScreen extends StatelessWidget {
         ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () => game.hideShare(),
+          onPressed: () => Navigator.of(context).pop(),
         ),
       ),
       body: Center(
@@ -45,9 +45,9 @@ class ShareScreen extends StatelessWidget {
             ),
             const SizedBox(height: 50),
             ElevatedButton(
-              onPressed: () {
-                Share.share(
-                    'I just got a high score of ${game.highScore} in Bust-a-Move! Can you beat it?');
+              onPressed: () async {
+                await Share.share(
+                    'I just got a high score of ${game.highScore} in Volt Rush! Can you beat it?');
               },
               child: const Text('Share High Score'),
             ),

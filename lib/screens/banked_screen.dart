@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:myapp/providers/game_provider.dart';
+import 'package:volt_rush/providers/game_provider.dart';
 
 class BankedScreen extends StatelessWidget {
   const BankedScreen({super.key});

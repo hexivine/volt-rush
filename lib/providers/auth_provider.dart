@@ -1,3 +1,4 @@
+import 'dart:developer' as developer;
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -16,8 +17,8 @@ class AuthProvider with ChangeNotifier {
       final userCredential = await _auth.signInAnonymously();
       _user = userCredential.user;
       notifyListeners();
-    } catch (e) {
-      print('Failed to sign in anonymously: $e');
+    } catch (e, s) {
+      developer.log('Failed to sign in anonymously', name: 'volt_rush.auth', error: e, stackTrace: s);
     }
   }
 }

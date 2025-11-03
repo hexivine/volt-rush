@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:myapp/providers/game_logic.dart';
+import 'package:volt_rush/providers/game_logic.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:myapp/firebase_options.dart';
-import 'package:myapp/providers/game_provider.dart';
-import 'package:myapp/providers/auth_provider.dart';
-import 'package:myapp/providers/leaderboard_provider.dart';
-import 'package:myapp/screens/home_screen.dart';
-import 'package:myapp/screens/game_screen.dart';
-import 'package:myapp/screens/banked_screen.dart';
-import 'package:myapp/screens/bust_screen.dart';
-import 'package:myapp/screens/onboarding_screen.dart';
+import 'package:volt_rush/firebase_options.dart';
+import 'package:volt_rush/providers/game_provider.dart';
+import 'package:volt_rush/providers/auth_provider.dart';
+import 'package:volt_rush/providers/leaderboard_provider.dart';
+import 'package:volt_rush/screens/home_screen.dart';
+import 'package:volt_rush/screens/game_screen.dart';
+import 'package:volt_rush/screens/banked_screen.dart';
+import 'package:volt_rush/screens/bust_screen.dart';
+import 'package:volt_rush/screens/onboarding_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => LeaderboardProvider()),
       ],
       child: MaterialApp(
-        title: 'Bust-a-Move',
+        title: 'Volt Rush',
         theme: ThemeData(
           primarySwatch: Colors.blue,
           scaffoldBackgroundColor: const Color(0xFF1A1A1A),
@@ -56,7 +56,7 @@ class MyApp extends StatelessWidget {
             style: ElevatedButton.styleFrom(
               foregroundColor: Colors.white,
               backgroundColor: Colors.red,
-              textStyle: GoogleFonts.pressStart2pTextTheme().button,
+              textStyle: GoogleFonts.pressStart2pTextTheme().labelLarge,
             ),
           ),
         ),

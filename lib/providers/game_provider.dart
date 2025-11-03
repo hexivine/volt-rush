@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:myapp/providers/auth_provider.dart';
-import 'package:myapp/providers/game_logic.dart';
-import 'package:myapp/services/leaderboard_service.dart';
+import 'package:volt_rush/providers/auth_provider.dart';
+import 'package:volt_rush/providers/game_logic.dart';
+import 'package:volt_rush/services/leaderboard_service.dart';
+import 'package:volt_rush/screens/settings_screen.dart';
+import 'package:volt_rush/screens/share_screen.dart';
 
 class GameProvider with ChangeNotifier {
   late GameLogic _gameLogic;
@@ -29,6 +31,25 @@ class GameProvider with ChangeNotifier {
       _leaderboardService.addScore(uid, _gameLogic.currentScore);
     }
     _gameLogic.bankScore();
+  }
+
+  void resetHighScore() {
+    _gameLogic.resetHighScore();
+    notifyListeners();
+  }
+
+  void showSettings(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const SettingsScreen()),
+    );
+  }
+
+  void showShare(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const ShareScreen()),
+    );
   }
 
   @override

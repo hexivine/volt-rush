@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:myapp/providers/game_provider.dart';
+import 'package:volt_rush/providers/game_provider.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -21,7 +21,7 @@ class SettingsScreen extends StatelessWidget {
         ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () => game.hideSettings(),
+          onPressed: () => Navigator.of(context).pop(),
         ),
       ),
       body: Center(

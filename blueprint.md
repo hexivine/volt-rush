@@ -1,8 +1,8 @@
-# Blueprint: Bust-a-Move
+# Blueprint: Volt Rush
 
 ## Overview
 
-This document outlines the architecture, design, and features of "Bust-a-Move," a fast-paced, score-chasing mobile game. The application is built with Flutter and leverages Firebase for backend services, including authentication and a real-time leaderboard.
+This document outlines the architecture, design, and features of "Volt Rush," a fast-paced, score-chasing mobile game. The application is built with Flutter and leverages Firebase for backend services, including authentication and a real-time leaderboard.
 
 ## Style and Design
 

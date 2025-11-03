@@ -26,7 +26,7 @@ class CircularProgressPainter extends CustomPainter {
     final radius = math.min(size.width / 2, size.height / 2);
 
     final backgroundPaint = Paint()
-      ..color = Colors.white.withOpacity(0.1)
+      ..color = Colors.white.withAlpha(25)
       ..strokeWidth = 15
       ..style = PaintingStyle.stroke;
 
