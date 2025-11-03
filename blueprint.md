@@ -1,27 +1,33 @@
-# Bust-a-Move Game
+# Blueprint
 
 ## Overview
 
-Bust-a-Move is a fast-paced, addictive mobile game where players test their nerve and timing to achieve the highest score possible. The game is simple to learn but challenging to master, making it perfect for quick bursts of fun.
+This document outlines the structure and features of the Bust-a-Move game.
+
+## Style and Design
+
+The game has a simple and clean design, with a focus on user experience. The color scheme is vibrant and engaging, with a dark theme and a noise texture background. The typography is clear and easy to read, using the Oswald and Open Sans fonts from Google Fonts.
 
 ## Features
 
-*   **Simple One-Tap Gameplay:** Tap the screen to increase your score. The longer you wait between taps, the higher the risk of busting.
-*   **High-Risk, High-Reward:** The score multiplier increases over time, but if you wait too long, you bust and lose everything.
-*   **Bank Your Score:** At any point, you can choose to "bank" your current score, saving it to your total and resetting the multiplier.
-*   **High Score Tracking:** The game saves your highest achieved score.
-*   **Sound and Vibration:** Immersive feedback with sound effects and vibrations for key game events.
-*   **Confetti Celebration:** A satisfying confetti explosion when you bank a high score.
-*   **Engaging UI:** A visually appealing interface with a breathing animation, a color-shifting progress bar, and glowing buttons to enhance the user experience.
-*   **Consistent Design:** All screens share a unified design with a radial gradient background and glowing text effects.
-*   **Progressive Difficulty:** The game gets progressively harder as the timer depletes faster with each tap.
+### Implemented
 
-## Design
+*   **Game Screen:** The main screen of the game, where the player taps to increase their score.
+*   **Score:** The player's current score is displayed on the game screen.
+*   **High Score:** The player's high score is saved and displayed on the home screen.
+*   **Timer:** A timer that counts down, and if it reaches zero, the player busts.
+*   **Bust Screen:** A screen that is displayed when the player busts.
+*   **Bank Screen:** A screen that is displayed when the player banks their score.
+*   **Home Screen:** The main menu of the game, with a play button and the high score.
+*   **Onboarding Screen:** A screen that is shown to the player the first time they open the game.
+*   **Settings Screen:** A screen where the player can reset their high score.
+*   **Share Screen:** A screen where the player can share their high score.
+*   **Sound Effects:** Sound effects for tapping, banking, and busting.
+*   **Background Music:** Background music that plays during the game.
+*   **Vibration:** The device vibrates when the player taps, banks, or busts.
+*   **Confetti:** Confetti is displayed when the player banks their score.
+*   **Animations:** Animations for the score, timer, and bust screen.
 
-*   **Retro Arcade Theme:** The game features a retro-inspired design with pixelated fonts and a dark, high-contrast color scheme.
-*   **Minimalist UI:** The user interface is clean and uncluttered, focusing on the core gameplay elements.
-*   **Custom Widgets:** The game uses custom-designed buttons and a circular progress bar to create a unique look and feel.
+### Current Plan
 
-## Current Plan
-
-*   **Progressive Difficulty:** Implement a progressive difficulty system where the timer depletes faster with each tap.
+I have restored the visual style of the application. The game is now fully functional and has a consistent design. I will now look for any bugs or areas of improvement.
