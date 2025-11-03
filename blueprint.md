@@ -1,33 +1,61 @@
-# Blueprint
+# Blueprint: Bust-a-Move
 
 ## Overview
 
-This document outlines the structure and features of the Bust-a-Move game.
+This document outlines the architecture, design, and features of "Bust-a-Move," a fast-paced, score-chasing mobile game. The application is built with Flutter and leverages Firebase for backend services, including authentication and a real-time leaderboard.
 
 ## Style and Design
 
-The game has a simple and clean design, with a focus on user experience. The color scheme is vibrant and engaging, with a dark theme and a noise texture background. The typography is clear and easy to read, using the Oswald and Open Sans fonts from Google Fonts.
+The game embraces a retro arcade aesthetic to create a nostalgic and engaging user experience.
 
-## Features
+*   **Theme:** Dark mode is central to the design, with a primary background color of `#1A1A1A`.
+*   **Typography:** The `Press Start 2P` font, sourced from Google Fonts, is used throughout the app to reinforce the classic video game feel.
+*   **Color Scheme:** The UI uses a simple, high-contrast color palette. Key actions are highlighted with a vibrant red, ensuring they stand out against the dark background.
+*   **Layout:** All screens feature clean, centered, and intuitive layouts, prioritizing ease of use and clarity.
 
-### Implemented
+## Features & Implementation
 
-*   **Game Screen:** The main screen of the game, where the player taps to increase their score.
-*   **Score:** The player's current score is displayed on the game screen.
-*   **High Score:** The player's high score is saved and displayed on the home screen.
-*   **Timer:** A timer that counts down, and if it reaches zero, the player busts.
-*   **Bust Screen:** A screen that is displayed when the player busts.
-*   **Bank Screen:** A screen that is displayed when the player banks their score.
-*   **Home Screen:** The main menu of the game, with a play button and the high score.
-*   **Onboarding Screen:** A screen that is shown to the player the first time they open the game.
-*   **Settings Screen:** A screen where the player can reset their high score.
-*   **Share Screen:** A screen where the player can share their high score.
-*   **Sound Effects:** Sound effects for tapping, banking, and busting.
-*   **Background Music:** Background music that plays during the game.
-*   **Vibration:** The device vibrates when the player taps, banks, or busts.
-*   **Confetti:** Confetti is displayed when the player banks their score.
-*   **Animations:** Animations for the score, timer, and bust screen.
+### Core Gameplay Mechanics
 
-### Current Plan
+*   **Scoring:** Players tap a button to increment their score during a time-limited round.
+*   **Banking:** Players can "Bank" their score at any point, which finalizes the score for the round and submits it to the leaderboard.
+*   **Busting:** A countdown timer adds pressure. If the timer expires before the player banks, they "Bust," and the score for that round is lost.
+*   **High Score:** The player's personal best score is saved locally on their device.
 
-I have restored the visual style of the application. The game is now fully functional and has a consistent design. I will now look for any bugs or areas of improvement.
+### Application Architecture
+
+The app is built on a modular architecture that separates UI, state management, and business logic.
+
+*   **State Management:** The `provider` package is used for state management.
+    *   `GameProvider`: Manages the overall game state (`home`, `playing`, `banked`, `bust`) and user interactions.
+    *   `GameLogic`: A separate class that encapsulates the core rules, scoring, and timer mechanics, keeping the game's business logic independent from the UI.
+    *   `AuthProvider`: Handles user authentication via Firebase.
+    *   `LeaderboardProvider`: Manages the state and data flow for the leaderboard.
+*   **Services:**
+    *   `LeaderboardService`: A dedicated service to handle all interactions with the Firestore database, abstracting the data layer from the rest of the application.
+
+### Screens
+
+*   `OnboardingScreen`: A welcome screen shown to users on their first launch.
+*   `HomeScreen`: The main menu, which displays the local high score and provides buttons to play the game, view the leaderboard, and share high scores.
+*   `GameScreen`: The active gameplay interface where players interact with the game.
+*   `BankedScreen`: A confirmation screen displayed after a player successfully banks their score.
+*   `BustScreen`: The screen shown when a player runs out of time and "busts."
+*   `LeaderboardScreen`: Displays the top 10 scores in real-time, fetched from Firestore.
+
+### Firebase Integration
+
+*   **Authentication:** The app uses `firebase_auth` to silently and anonymously sign in users, providing a stable user ID for tracking scores without requiring a manual login process.
+*   **Real-time Leaderboard:** `cloud_firestore` is used to store and retrieve leaderboard data. The `LeaderboardScreen` listens to a live stream of the top 10 scores, ensuring the data is always up-to-date.
+
+### Local Persistence
+
+*   `shared_preferences` is used to persist the user's local high score and to track whether they have completed the initial onboarding.
+
+### Social Sharing
+
+*   The `share_plus` package is integrated into the `HomeScreen`, allowing players to share a pre-composed message with their high score through the native device sharing dialog.
+
+## Final Status
+
+The project is now feature-complete. It includes a full gameplay loop, user authentication, a real-time online leaderboard, and social sharing capabilities. The code has been refactored for clarity, scalability, and maintainability, with a clear separation between UI, state, and logic. This blueprint reflects the final state of the application.

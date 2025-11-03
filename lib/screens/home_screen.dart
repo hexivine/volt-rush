@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:myapp/providers/game_provider.dart';
+import 'package:myapp/screens/leaderboard_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -9,6 +10,8 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final game = Provider.of<GameProvider>(context);
+    final String shareText =
+        'I just got a new high score of ${game.highScore} in Bust-a-Move! Can you beat it?';
 
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -17,49 +20,46 @@ class HomeScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'Bust-a-Move',
-              style: GoogleFonts.oswald(
-                fontSize: 50,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
+              'High Score',
+              style: Theme.of(context).textTheme.headlineMedium,
+            ),
+            Text(
+              '${game.highScore}',
+              style: Theme.of(context).textTheme.displayLarge,
             ),
             const SizedBox(height: 50),
             ElevatedButton(
-              onPressed: () => game.setupGame(),
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
-                backgroundColor: Theme.of(context).colorScheme.primary,
-                foregroundColor: Colors.white,
-              ),
+              onPressed: () => game.startGame(),
               child: const Text('Play'),
-            ),
-            const SizedBox(height: 20),
-            Text(
-              'High Score: ${game.highScore}',
-              style: GoogleFonts.oswald(
-                fontSize: 20,
-                color: Colors.white,
-              ),
             ),
             const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                TextButton(
-                  onPressed: () => game.showSettings(),
-                  child: const Text(
-                    'Settings',
-                    style: TextStyle(color: Colors.white),
-                  ),
+                IconButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const LeaderboardScreen()),
+                    );
+                  },
+                  icon: const Icon(Icons.leaderboard, color: Colors.white),
+                  tooltip: 'Leaderboard',
                 ),
-                const SizedBox(width: 20),
-                TextButton(
-                  onPressed: () => game.showShare(),
-                  child: const Text(
-                    'Share',
-                    style: TextStyle(color: Colors.white),
-                  ),
+                IconButton(
+                  onPressed: () {
+                    // TODO: Implement settings screen
+                  },
+                  icon: const Icon(Icons.settings, color: Colors.white),
+                  tooltip: 'Settings',
+                ),
+                IconButton(
+                  onPressed: () {
+                    Share.share(shareText);
+                  },
+                  icon: const Icon(Icons.share, color: Colors.white),
+                  tooltip: 'Share High Score',
                 ),
               ],
             )
