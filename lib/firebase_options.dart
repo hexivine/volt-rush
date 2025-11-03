@@ -57,7 +57,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyDfPJ4_3MDyKSbqZGuZpeBXnhaAZcX-O9Q',
-    appId: '1:864914859692:android:effef292a6d5984f636109',
+    appId: '1:864914859692:android:3f3349da8c057279636109',
     messagingSenderId: '864914859692',
     projectId: 'volt-rush',
     storageBucket: 'volt-rush.firebasestorage.app',

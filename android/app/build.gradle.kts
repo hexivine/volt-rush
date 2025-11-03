@@ -9,7 +9,7 @@ plugins {
 }
 
 android {
-    namespace = "com.voltrush.app"
+    namespace = "com.hexivine.voidrush"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -23,7 +23,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.voltrush.app"
+        applicationId = "com.hexivine.voidrush"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode

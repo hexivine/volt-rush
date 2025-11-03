@@ -1,12 +1,13 @@
 
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.hexivine.voidrush">
     <uses-permission android:name="android.permission.VIBRATE"/>
     <application
         android:label="Volt Rush"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
-            android:name=".MainActivity"
+            android:name="com.hexivine.voidrush.MainActivity"
             android:exported="true"
             android:launchMode="singleTop"
             android:taskAffinity=""

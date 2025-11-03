@@ -7,6 +7,25 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:864914859692:android:3f3349da8c057279636109",
+        "android_client_info": {
+          "package_name": "com.hexivine.voidrush"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDfPJ4_3MDyKSbqZGuZpeBXnhaAZcX-O9Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:864914859692:android:effef292a6d5984f636109",
         "android_client_info": {
           "package_name": "com.voltrush.app"

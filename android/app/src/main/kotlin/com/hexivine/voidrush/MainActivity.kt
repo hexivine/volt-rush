@@ -1,4 +1,4 @@
-package com.voltrush.app
+package com.hexivine.voidrush
 
 import io.flutter.embedding.android.FlutterActivity
 
