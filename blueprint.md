@@ -1,61 +1,67 @@
-# Blueprint: Volt Rush
+# Volt Rush UI Redesign Blueprint
 
 ## Overview
+This blueprint outlines the plan to redesign the UI of the "Volt Rush" application to achieve a futuristic, energetic, and visually attractive game-like aesthetic, adhering to Material Design principles where applicable.
 
-This document outlines the architecture, design, and features of "Volt Rush," a fast-paced, score-chasing mobile game. The application is built with Flutter and leverages Firebase for backend services, including authentication and a real-time leaderboard.
+## Project Outline (Current State)
+The application currently has a basic Flutter UI. The existing `lib/theme.dart` and `lib/main.dart` will be modified to implement the new design.
 
-## Style and Design
+## Plan for Current Request: Implement a Super Design
 
-The game embraces a retro arcade aesthetic to create a nostalgic and engaging user experience.
+### 1. Aesthetic & Color Palette
+*   **Aesthetic:** Futuristic, energetic, and vibrant.
+*   **Primary Seed Color:** Electric blue or deep purple.
+*   **Accent Colors:** Complementary neon accents (e.g., lime green, bright orange) for interactive elements and highlights.
+*   **Backgrounds:** Dark backgrounds to make neon elements pop.
 
-*   **Theme:** Dark mode is central to the design, with a primary background color of `#1A1A1A`.
-*   **Typography:** The `Press Start 2P` font, sourced from Google Fonts, is used throughout the app to reinforce the classic video game feel.
-*   **Color Scheme:** The UI uses a simple, high-contrast color palette. Key actions are highlighted with a vibrant red, ensuring they stand out against the dark background.
-*   **Layout:** All screens feature clean, centered, and intuitive layouts, prioritizing ease of use and clarity.
+### 2. Typography
+*   **Titles/Important Info:** Modern, bold, and slightly stylized fonts (e.g., Oswald, Roboto).
+*   **Body Text:** Clean and readable font (e.g., Open Sans).
+*   **Tool:** `google_fonts` package will be used.
 
-## Features & Implementation
+### 3. Key UI Elements
+*   **Buttons:** "Glow" effect on press, slightly rounded corners, clear iconography.
+*   **Backgrounds:** Subtle animated gradients or geometric patterns evoking energy/speed (to be considered in a later iteration).
+*   **Navigation:** Clear, icon-based navigation with subtle animations.
+*   **Animations/Transitions:** Fast, smooth transitions between screens, subtle particle effects on key interactions (to be considered in a later iteration).
 
-### Core Gameplay Mechanics
+### 4. Component Theming
+*   Leverage `ThemeData` to define:
+    *   `ColorScheme` using `ColorScheme.fromSeed`.
+    *   `TextTheme` using `GoogleFonts`.
+    *   `AppBarTheme` for consistent app bar styling.
+    *   `ElevatedButtonTheme` for consistent button styling.
 
-*   **Scoring:** Players tap a button to increment their score during a time-limited round.
-*   **Banking:** Players can "Bank" their score at any point, which finalizes the score for the round and submits it to the leaderboard.
-*   **Busting:** A countdown timer adds pressure. If the timer expires before the player banks, they "Bust," and the score for that round is lost.
-*   **High Score:** The player's personal best score is saved locally on their device.
+### 5. Implementation Steps
 
-### Application Architecture
+#### Step 5.1: Update `pubspec.yaml` (Verification)
+*   Ensure `google_fonts` and `provider` packages are present. (Already verified in previous steps).
 
-The app is built on a modular architecture that separates UI, state management, and business logic.
+#### Step 5.2: Refactor `lib/theme.dart`
+*   Create a `ThemeProvider` class extending `ChangeNotifier` to manage `ThemeMode` (light/dark/system).
+*   Define `lightTheme` and `darkTheme` `ThemeData` objects.
+*   Implement `ColorScheme.fromSeed` with a chosen seed color (e.g., `Colors.deepPurple`).
+*   Define `TextTheme` using `GoogleFonts` for `displayLarge`, `titleLarge`, `bodyMedium`, etc.
+*   Customize `AppBarTheme` (background, foreground, title text style).
+*   Customize `ElevatedButtonTheme` (colors, shape, padding, text style).
 
-*   **State Management:** The `provider` package is used for state management.
-    *   `GameProvider`: Manages the overall game state (`home`, `playing`, `banked`, `bust`) and user interactions.
-    *   `GameLogic`: A separate class that encapsulates the core rules, scoring, and timer mechanics, keeping the game's business logic independent from the UI.
-    *   `AuthProvider`: Handles user authentication via Firebase.
-    *   `LeaderboardProvider`: Manages the state and data flow for the leaderboard.
-*   **Services:**
-    *   `LeaderboardService`: A dedicated service to handle all interactions with the Firestore database, abstracting the data layer from the rest of the application.
+#### Step 5.3: Integrate `ThemeProvider` into `main.dart`
+*   Wrap the `MyApp` widget with `ChangeNotifierProvider<ThemeProvider>`.
+*   Use `Consumer<ThemeProvider>` in `MyApp`'s `build` method to apply the selected `themeMode`.
 
-### Screens
+#### Step 5.4: Apply Theming to `MyHomePage` (and other relevant screens)
+*   Modify existing widgets in `MyHomePage` (and other screens as needed) to use `Theme.of(context).textTheme` and other theme properties.
 
-*   `OnboardingScreen`: A welcome screen shown to users on their first launch.
-*   `HomeScreen`: The main menu, which displays the local high score and provides buttons to play the game, view the leaderboard, and share high scores.
-*   `GameScreen`: The active gameplay interface where players interact with the game.
-*   `BankedScreen`: A confirmation screen displayed after a player successfully banks their score.
-*   `BustScreen`: The screen shown when a player runs out of time and "busts."
-*   `LeaderboardScreen`: Displays the top 10 scores in real-time, fetched from Firestore.
+#### Step 5.5: Implement a Theme Toggle
+*   Add `IconButton` widgets to the `AppBar` in `MyHomePage` to allow users to toggle between light/dark modes and set the system theme.
 
-### Firebase Integration
+#### Step 5.6: Run `flutter pub get`
+*   After modifying `lib/theme.dart` and `main.dart`, run `flutter pub get` to ensure all dependencies are correctly fetched.
 
-*   **Authentication:** The app uses `firebase_auth` to silently and anonymously sign in users, providing a stable user ID for tracking scores without requiring a manual login process.
-*   **Real-time Leaderboard:** `cloud_firestore` is used to store and retrieve leaderboard data. The `LeaderboardScreen` listens to a live stream of the top 10 scores, ensuring the data is always up-to-date.
+#### Step 5.7: Build and Verify
+*   Build and run the application to verify the new UI design and theme toggling functionality.
 
-### Local Persistence
-
-*   `shared_preferences` is used to persist the user's local high score and to track whether they have completed the initial onboarding.
-
-### Social Sharing
-
-*   The `share_plus` package is integrated into the `HomeScreen`, allowing players to share a pre-composed message with their high score through the native device sharing dialog.
-
-## Final Status
-
-The project is now feature-complete. It includes a full gameplay loop, user authentication, a real-time online leaderboard, and social sharing capabilities. The code has been refactored for clarity, scalability, and maintainability, with a clear separation between UI, state, and logic. This blueprint reflects the final state of the application.
+### 6. Future Enhancements (Beyond current scope)
+*   Custom animated backgrounds.
+*   Particle effects on interactions.
+*   More complex custom widget styling.

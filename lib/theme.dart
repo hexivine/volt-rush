@@ -1,19 +1,79 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+
+// ThemeProvider class to manage the theme state
+class ThemeProvider with ChangeNotifier {
+  ThemeMode _themeMode = ThemeMode.system; // Default to system theme
+
+  ThemeMode get themeMode => _themeMode;
+
+  void toggleTheme() {
+    _themeMode = _themeMode == ThemeMode.light ? ThemeMode.dark : ThemeMode.light;
+    notifyListeners();
+  }
+
+  void setSystemTheme() {
+    _themeMode = ThemeMode.system;
+    notifyListeners();
+  }
+}
 
 class AppTheme {
-  static ThemeData get theme {
-    return ThemeData(
-      useMaterial3: true,
-      colorScheme: ColorScheme.fromSeed(
-        seedColor: const Color(0xFF6B4D34),
-        brightness: Brightness.dark,
+  static const Color primarySeedColor = Colors.deepPurple;
+
+  // Define a common TextTheme
+  static final TextTheme appTextTheme = TextTheme(
+    displayLarge: GoogleFonts.oswald(fontSize: 57, fontWeight: FontWeight.bold),
+    titleLarge: GoogleFonts.roboto(fontSize: 22, fontWeight: FontWeight.w500),
+    bodyMedium: GoogleFonts.openSans(fontSize: 14),
+  );
+
+  // Light Theme
+  static final ThemeData lightTheme = ThemeData(
+    useMaterial3: true,
+    colorScheme: ColorScheme.fromSeed(
+      seedColor: primarySeedColor,
+      brightness: Brightness.light,
+    ),
+    textTheme: appTextTheme,
+    appBarTheme: AppBarTheme(
+      backgroundColor: primarySeedColor,
+      foregroundColor: Colors.white,
+      titleTextStyle: GoogleFonts.oswald(fontSize: 24, fontWeight: FontWeight.bold),
+    ),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        foregroundColor: Colors.white,
+        backgroundColor: primarySeedColor,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+        textStyle: GoogleFonts.roboto(fontSize: 16, fontWeight: FontWeight.w500),
       ),
-      textTheme: TextTheme(
-        displayLarge: GoogleFonts.oswald(fontSize: 57, fontWeight: FontWeight.bold),
-        titleLarge: GoogleFonts.roboto(fontSize: 22, fontWeight: FontWeight.w500),
-        bodyMedium: GoogleFonts.openSans(fontSize: 14),
+    ),
+  );
+
+  // Dark Theme
+  static final ThemeData darkTheme = ThemeData(
+    useMaterial3: true,
+    colorScheme: ColorScheme.fromSeed(
+      seedColor: primarySeedColor,
+      brightness: Brightness.dark,
+    ),
+    textTheme: appTextTheme,
+    appBarTheme: AppBarTheme(
+      backgroundColor: Colors.grey[900],
+      foregroundColor: Colors.white,
+      titleTextStyle: GoogleFonts.oswald(fontSize: 24, fontWeight: FontWeight.bold),
+    ),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        foregroundColor: Colors.black,
+        backgroundColor: primarySeedColor.withOpacity(0.5),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+        textStyle: GoogleFonts.roboto(fontSize: 16, fontWeight: FontWeight.w500),
       ),
-    );
-  }
+    ),
+  );
 }

@@ -11,7 +11,7 @@ import 'package:volt_rush/screens/home_screen.dart';
 import 'package:volt_rush/screens/game_screen.dart';
 import 'package:volt_rush/screens/banked_screen.dart';
 import 'package:volt_rush/screens/bust_screen.dart';
-import 'package:volt_rush/screens/onboarding_screen.dart';
+import 'package:volt_rush/theme.dart'; // Import the new theme file
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,49 +34,34 @@ class MyApp extends StatelessWidget {
           update: (_, auth, game) => GameProvider(authProvider: auth),
         ),
         ChangeNotifierProvider(create: (_) => LeaderboardProvider()),
+        ChangeNotifierProvider(create: (_) => ThemeProvider()), // Add ThemeProvider
       ],
-      child: MaterialApp(
-        title: 'Volt Rush',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-          scaffoldBackgroundColor: const Color(0xFF1A1A1A),
-          textTheme: GoogleFonts.pressStart2pTextTheme(
-            Theme.of(context).textTheme,
-          ).copyWith(
-            bodyLarge: const TextStyle(color: Colors.white),
-            bodyMedium: const TextStyle(color: Colors.white),
-            displayLarge: const TextStyle(color: Colors.white),
-            displayMedium: const TextStyle(color: Colors.white),
-            displaySmall: const TextStyle(color: Colors.white),
-            headlineMedium: const TextStyle(color: Colors.white),
-            headlineSmall: const TextStyle(color: Colors.white),
-            titleLarge: const TextStyle(color: Colors.white),
-          ),
-          elevatedButtonTheme: ElevatedButtonThemeData(
-            style: ElevatedButton.styleFrom(
-              foregroundColor: Colors.white,
-              backgroundColor: Colors.red,
-              textStyle: GoogleFonts.pressStart2pTextTheme().labelLarge,
+      child: Consumer<ThemeProvider>( // Wrap MaterialApp with Consumer
+        builder: (context, themeProvider, child) {
+          return MaterialApp(
+            title: 'Volt Rush',
+            theme: AppTheme.lightTheme, // Use lightTheme from AppTheme
+            darkTheme: AppTheme.darkTheme, // Use darkTheme from AppTheme
+            themeMode: themeProvider.themeMode, // Use themeMode from ThemeProvider
+            home: Consumer<GameProvider>(
+              builder: (context, game, child) {
+                if (game.showOnboarding) {
+                  return const HomeScreen();
+                }
+                switch (game.gameState) {
+                  case GameState.home:
+                    return const HomeScreen();
+                  case GameState.playing:
+                    return const GameScreen();
+                  case GameState.banked:
+                    return const BankedScreen();
+                  case GameState.bust:
+                    return const BustScreen();
+                }
+              },
             ),
-          ),
-        ),
-        home: Consumer<GameProvider>(
-          builder: (context, game, child) {
-            if (game.showOnboarding) {
-              return const OnboardingScreen();
-            }
-            switch (game.gameState) {
-              case GameState.home:
-                return const HomeScreen();
-              case GameState.playing:
-                return const GameScreen();
-              case GameState.banked:
-                return const BankedScreen();
-              case GameState.bust:
-                return const BustScreen();
-            }
-          },
-        ),
+          );
+        },
       ),
     );
   }
