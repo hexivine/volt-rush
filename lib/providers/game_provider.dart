@@ -8,9 +8,11 @@ import 'package:volt_rush/screens/share_screen.dart';
 class GameProvider with ChangeNotifier {
   late GameLogic _gameLogic;
   final AuthProvider? _authProvider;
-  final LeaderboardService _leaderboardService = LeaderboardService();
+  final LeaderboardService _leaderboardService;
 
-  GameProvider({AuthProvider? authProvider}) : _authProvider = authProvider {
+  GameProvider({AuthProvider? authProvider, LeaderboardService? leaderboardService})
+      : _authProvider = authProvider,
+        _leaderboardService = leaderboardService ?? LeaderboardService() {
     _gameLogic = GameLogic(onStateChanged: () => notifyListeners());
   }
 

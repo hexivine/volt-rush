@@ -1,30 +1,60 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
-import 'package:volt_rush/main.dart';
+import 'package:volt_rush/providers/game_logic.dart';
 import 'package:volt_rush/providers/game_provider.dart';
+import 'package:volt_rush/providers/auth_provider.dart';
+import 'package:volt_rush/providers/leaderboard_provider.dart';
+import 'package:volt_rush/services/leaderboard_service.dart';
+import 'package:volt_rush/theme.dart';
+import 'package:volt_rush/screens/home_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+// Mock Providers
+class MockAuthProvider extends ChangeNotifier implements AuthProvider {
+  @override
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
+  @override
+  get user => null;
+}
+
+class MockLeaderboardProvider extends ChangeNotifier implements LeaderboardProvider {
+  @override
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
+}
+
+class MockLeaderboardService implements LeaderboardService {
+  @override
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
+}
 
 void main() {
-  testWidgets('Starts on home screen and can start game', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  testWidgets('Home screen displays high score and max combo', (WidgetTester tester) async {
+    // Mock shared preferences
+    SharedPreferences.setMockInitialValues({'highScore': 100, 'maxCombo': 10});
 
-    // Verify that the game starts on the home screen.
+    await tester.pumpWidget(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider<AuthProvider>(create: (_) => MockAuthProvider()),
+          ChangeNotifierProvider<GameProvider>(
+            create: (_) => GameProvider(leaderboardService: MockLeaderboardService()),
+          ),
+          ChangeNotifierProvider<LeaderboardProvider>(create: (_) => MockLeaderboardProvider()),
+          ChangeNotifierProvider(create: (_) => ThemeProvider()),
+        ],
+        child: const MaterialApp(
+          home: HomeScreen(),
+        ),
+      ),
+    );
+
+    // Initial pump
+    await tester.pumpAndSettle();
+
+    // Verify initial values from mock
     expect(find.text('High Score'), findsOneWidget);
-
-    // Tap the play button and trigger a frame.
-    await tester.tap(find.text('Play'));
-    await tester.pump();
-
-    // Verify that the game has started.
-    final GameProvider gameProvider = tester.element(find.byType(MaterialApp)).findAncestorWidgetOfExactType<MultiProvider>().p.first as GameProvider;
-    expect(gameProvider.gameState, GameState.playing);
+    expect(find.text('100'), findsOneWidget);
+    expect(find.text('Max Combo: 10'), findsOneWidget);
   });
 }

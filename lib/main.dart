@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:volt_rush/providers/game_logic.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:volt_rush/firebase_options.dart';
 import 'package:volt_rush/providers/game_provider.dart';
 import 'package:volt_rush/providers/auth_provider.dart';
@@ -30,8 +29,8 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProxyProvider<AuthProvider, GameProvider>(
-          create: (_) => GameProvider(),
-          update: (_, auth, game) => GameProvider(authProvider: auth),
+          create: (_) => GameProvider(leaderboardService: LeaderboardService()),
+          update: (_, auth, game) => GameProvider(authProvider: auth, leaderboardService: LeaderboardService()),
         ),
         ChangeNotifierProvider(create: (_) => LeaderboardProvider()),
         ChangeNotifierProvider(create: (_) => ThemeProvider()), // Add ThemeProvider
