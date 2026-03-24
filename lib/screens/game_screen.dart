@@ -19,6 +19,14 @@ class GameScreen extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  if (game.currentCombo > 1)
+                    Text(
+                      'Combo x${game.currentCombo}',
+                      style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                            color: Colors.orangeAccent,
+                            fontWeight: FontWeight.bold,
+                          ),
+                    ),
                   Text(
                     '${game.currentScore}',
                     style: Theme.of(context).textTheme.displayLarge,

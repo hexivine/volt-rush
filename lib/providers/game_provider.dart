@@ -17,6 +17,8 @@ class GameProvider with ChangeNotifier {
   // Expose game state
   int get currentScore => _gameLogic.currentScore;
   int get highScore => _gameLogic.highScore;
+  int get maxCombo => _gameLogic.maxCombo;
+  int get currentCombo => _gameLogic.currentCombo;
   double get timeRemaining => _gameLogic.timeRemaining;
   GameState get gameState => _gameLogic.gameState;
   bool get showOnboarding => _gameLogic.showOnboarding;
