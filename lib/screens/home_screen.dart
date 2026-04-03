@@ -45,13 +45,6 @@ class HomeScreen extends StatelessWidget {
               '${game.highScore}',
               style: Theme.of(context).textTheme.displayLarge,
             ),
-            const SizedBox(height: 10),
-            Text(
-              'Max Combo: ${game.maxCombo}',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    color: Colors.orangeAccent,
-                  ),
-            ),
             const SizedBox(height: 50),
             ElevatedButton(
               onPressed: () => game.startGame(),
