@@ -62,7 +62,7 @@ class HomeScreen extends StatelessWidget {
                           builder: (context) => const LeaderboardScreen()),
                     );
                   },
-                  icon: const Icon(Icons.leaderboard, color: Colors.white),
+                  icon: const Icon(Icons.emoji_events, color: Colors.white),
                   tooltip: 'Leaderboard',
                 ),
                 IconButton(
