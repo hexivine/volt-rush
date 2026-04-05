@@ -14,7 +14,7 @@ class HomeScreen extends StatelessWidget {
     final game = Provider.of<GameProvider>(context);
     final themeProvider = Provider.of<ThemeProvider>(context); // Access ThemeProvider
     final String shareText =
-        'I just got a new high score of ${game.highScore} in Volt Rush! Can you beat it?';
+        "I just got a new high score of ${game.highScore} in Volt Rush! Can you beat it?";
 
     return Scaffold(
       appBar: AppBar(
@@ -45,6 +45,17 @@ class HomeScreen extends StatelessWidget {
               '${game.highScore}',
               style: Theme.of(context).textTheme.displayLarge,
             ),
+            if (game.comboCount > 0) ...[
+              const SizedBox(height: 10),
+              Text(
+                '${game.multiplier}x Multiplier Active!',
+                style: TextStyle(
+                  color: Colors.amber,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+              ),
+            ],
             const SizedBox(height: 50),
             ElevatedButton(
               onPressed: () => game.startGame(),
