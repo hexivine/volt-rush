@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
       child: Consumer<ThemeProvider>( // Wrap MaterialApp with Consumer
         builder: (context, themeProvider, child) {
           return MaterialApp(
-            title: 'Volt Rush Game v3 - CodePeel Tested',
+            title: 'Volt Rush Game v3 - CodePeel PR Test',
             theme: AppTheme.lightTheme, // Use lightTheme from AppTheme
             darkTheme: AppTheme.darkTheme, // Use darkTheme from AppTheme
             themeMode: themeProvider.themeMode, // Use themeMode from ThemeProvider
