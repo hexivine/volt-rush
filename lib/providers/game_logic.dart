@@ -10,9 +10,9 @@ class GameLogic {
   bool _showOnboarding = true;
   int _comboCount = 0;
   double _multiplier = 1.0;
-  static const int _comboThreshold = 5;
-  static const double _maxMultiplier = 3.0;
-  static const double _timeBonus = 2.0;
+  static const int _comboThreshold = 3;
+  static const double _maxMultiplier = 4.0;
+  static const double _timeBonus = 2.5;
 
   int get currentScore => _currentScore;
   int get highScore => _highScore;
