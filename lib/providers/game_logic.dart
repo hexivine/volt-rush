@@ -8,12 +8,19 @@ class GameLogic {
   Timer? _timer;
   GameState _gameState = GameState.home;
   bool _showOnboarding = true;
+  int _comboCount = 0;
+  double _multiplier = 1.0;
+  static const int _comboThreshold = 5;
+  static const double _maxMultiplier = 3.0;
+  static const double _timeBonus = 2.0;
 
   int get currentScore => _currentScore;
   int get highScore => _highScore;
   double get timeRemaining => _timeRemaining;
   GameState get gameState => _gameState;
   bool get showOnboarding => _showOnboarding;
+  int get comboCount => _comboCount;
+  double get multiplier => _multiplier;
 
   final Function() onStateChanged;
 
@@ -56,6 +63,8 @@ class GameLogic {
     _timeRemaining = 10.0;
     _gameState = GameState.playing;
     _showOnboarding = false;
+    _comboCount = 0;
+    _multiplier = 1.0;
     _saveOnboardingState();
     _timer?.cancel();
     _timer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
@@ -70,7 +79,18 @@ class GameLogic {
   }
 
   void incrementScore() {
-    _currentScore++;
+    _comboCount++;
+    if (_comboCount >= _comboThreshold) {
+      _multiplier = (_multiplier + 0.5).clamp(1.0, _maxMultiplier);
+      _comboCount = 0;
+    }
+    final pointsToAdd = (_multiplier >= 1.5) ? 2 : 1;
+    _currentScore += pointsToAdd;
+    onStateChanged();
+  }
+
+  void addTimeBonus() {
+    _timeRemaining = (_timeRemaining + _timeBonus).clamp(0.0, 15.0);
     onStateChanged();
   }
 
@@ -81,6 +101,8 @@ class GameLogic {
     }
     _gameState = GameState.banked;
     _timer?.cancel();
+    _comboCount = 0;
+    _multiplier = 1.0;
     onStateChanged();
   }
 
