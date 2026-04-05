@@ -23,3 +23,4 @@ new test push for fresh logs
 test 5 - checking logs
 test 6 - fallback retry deployed
 test 7 - verify new processing
+test 8 - final verification
