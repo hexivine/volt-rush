@@ -23,6 +23,25 @@ class GameScreen extends StatelessWidget {
                     '${game.currentScore}',
                     style: Theme.of(context).textTheme.displayLarge,
                   ),
+                  if (game.multiplier > 1.0) ...[
+                    const SizedBox(height: 10),
+                    Text(
+                      '${game.multiplier}x Multiplier',
+                      style: const TextStyle(
+                        color: Colors.amber,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                      ),
+                    ),
+                  ],
+                  const SizedBox(height: 5),
+                  Text(
+                    'Combo: ${game.comboCount}/3',
+                    style: TextStyle(
+                      color: Colors.white.withOpacity(0.7),
+                      fontSize: 14,
+                    ),
+                  ),
                 ],
               ),
             ),
