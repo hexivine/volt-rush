@@ -1,7 +1,7 @@
 {
   "tool_name": "Bash",
-  "tool_input_preview": "{\"command\":\"cd E:/antig/codepeel/Startup-Agents/codepeel/functions && npm run deploy:single 2>&1\",\"timeout\":180000,\"description\":\"Deploy updated function to Firebase with increased timeout\"}",
-  "error": "Exit code 1\nnpm ERR! Missing script: \"deploy:single\"\nnpm ERR! \nnpm ERR! To see a list of scripts, run:\nnpm ERR!   npm run\n\nnpm ERR! A complete log of this run can be found in: C:\\Users\\bbhar\\AppData\\Local\\npm-cache\\_logs\\2026-04-05T16_05_49_896Z-debug-0.log",
-  "timestamp": "2026-04-05T16:05:50.611Z",
+  "tool_input_preview": "{\"command\":\"cd E:/antig/codepeel/Startup-Agents/codepeel/functions && npm run build 2>&1 && firebase deploy --only functions 2>&1\",\"timeout\":300000,\"description\":\"Deploy with minimal firebase.json (se...",
+  "error": "Exit code 1\n\n> codepeel-functions@1.0.0 build\n> tsc\n\n\r\n\u001b[1m\u001b[37m===\u001b[39m Deploying to 'codepeel'...\u001b[22m\r\n\r\n\u001b[36m\u001b[1mi \u001b[22m\u001b[39m deploying \u001b[1mfunctions\u001b[22m\r\n\u001b[36m\u001b[1mi  functions:\u001b[22m\u001b[39m preparing codebase \u001b[1mdefault\u001b[22m for deployment\r\n\u001b[36m\u001b[1mi  functions:\u001b[22m\u001b[39m ensuring required API \u001b[1mcloudfunctions.googleapis.com\u001b[22m is enabled...\r\n\u001b[36m\u001b[1mi  functions:\u001b[22m\u001b[39m ensuring required API \u001b[1mcloudbuild.googleapis.com\u001b[22m is enabled...\r\n\u001b[36m\u001b[1mi  artifactregistry:\u001b[22m\u001b[39m e...",
+  "timestamp": "2026-04-05T16:51:50.019Z",
   "retry_count": 1
 }
