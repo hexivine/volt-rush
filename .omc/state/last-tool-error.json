@@ -1,0 +1,7 @@
+{
+  "tool_name": "Bash",
+  "tool_input_preview": "{\"command\":\"cd E:/antig/codepeel/Startup-Agents/codepeel/functions && npm run deploy:single 2>&1\",\"timeout\":180000,\"description\":\"Deploy updated function to Firebase with increased timeout\"}",
+  "error": "Exit code 1\nnpm ERR! Missing script: \"deploy:single\"\nnpm ERR! \nnpm ERR! To see a list of scripts, run:\nnpm ERR!   npm run\n\nnpm ERR! A complete log of this run can be found in: C:\\Users\\bbhar\\AppData\\Local\\npm-cache\\_logs\\2026-04-05T16_05_49_896Z-debug-0.log",
+  "timestamp": "2026-04-05T16:05:50.611Z",
+  "retry_count": 1
+}
