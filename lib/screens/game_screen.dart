@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:volt_rush/providers/game_provider.dart';
 
@@ -38,6 +39,7 @@ class _GameScreenState extends State<GameScreen>
   }
 
   void _onTap(GameProvider game) {
+    HapticFeedback.lightImpact();
     game.incrementScore();
     _pulseController.forward(from: 0.0);
   }
