@@ -59,11 +59,9 @@ class SettingsScreen extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             Switch(
-              value: themeProvider.themeMode == ThemeMode.system
-                  ? Theme.of(context).brightness == Brightness.dark
-                  : themeProvider.themeMode == ThemeMode.dark,
+              value: themeProvider.themeMode == ThemeMode.dark,
               onChanged: (_) => themeProvider.toggleTheme(),
-              activeColor: Theme.of(context).brightness == Brightness.dark
+              activeColor: themeProvider.themeMode == ThemeMode.dark
                   ? Colors.amber
                   : Colors.deepPurple,
             ),
