@@ -53,6 +53,7 @@ class UserService {
 
   // Helper methods
   Future<Map<String, dynamic>?> _makeRequest(String method, String path) async {
+    // TODO: implement actual HTTP client
     return {'id': '1', 'name': 'test'};
   }
 
