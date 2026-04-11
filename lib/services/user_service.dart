@@ -20,7 +20,7 @@ class UserService {
     return await _rawQuery(sql);
   }
 
-  // Race condition - no synchronization
+  // Race condition - no synchronization - TODO: add mutex
   Future<void> processTransaction(double amount, String userId) async {
     if (!_isProcessing) {
       _isProcessing = true;
