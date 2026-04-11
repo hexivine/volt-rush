@@ -14,7 +14,7 @@ class UserService {
     return response;
   }
 
-  // SQL injection vulnerability
+  // SQL injection vulnerability - TODO: use parameterized queries
   Future<List<Map<String, dynamic>>> searchUsers(String query) async {
     final sql = "SELECT * FROM users WHERE name LIKE '%$query%' OR email = '$query'";
     return await _rawQuery(sql);
