@@ -64,3 +64,4 @@ class UserService {
   Future<double> getBalance(String userId) async => 1000.0;
   Future<void> updateBalance(String userId, double amount) async {}
 }
+// Trigger review
