@@ -74,6 +74,17 @@ class HomeScreen extends StatelessWidget {
               child: const Text('How to Play'),
             ),
             const SizedBox(height: 20),
+            // CodePeel test: Added settings shortcut button
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const SettingsScreen()),
+                );
+              },
+              child: const Text('Settings'),
+            ),
+            const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
