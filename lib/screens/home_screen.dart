@@ -51,6 +51,29 @@ class HomeScreen extends StatelessWidget {
               child: const Text('Play'),
             ),
             const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () => showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: const Text('How to Play'),
+                  content: const Text(
+                    'Volt Rush is a fast-paced reaction game!\n\n'
+                    '1. Press Play to start\n'
+                    '2. React quickly to win points\n'
+                    '3. Bank your points before you bust!\n\n'
+                    'The faster you react, the higher your score!',
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text('Got it!'),
+                    ),
+                  ],
+                ),
+              ),
+              child: const Text('How to Play'),
+            ),
+            const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
