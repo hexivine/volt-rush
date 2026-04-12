@@ -1,0 +1,7 @@
+{
+  "tool_name": "Bash",
+  "tool_input_preview": "{\"command\":\"dev-browser --headless <<'EOF'\\nconst page = await browser.getPage(\\\"main\\\");\\nawait page.goto(\\\"https://github.com/login\\\", { waitUntil: \\\"networkidle\\\" });\\nconst screenshot = await page...",
+  "error": "Exit code 1\nTypeError: File name must be a non-empty string\n    at requireString (file:///C:/Users/bbhar/.dev-browser/daemon.mjs:5691:11)\n    at #writeTempFile (file:///C:/Users/bbhar/.dev-browser/daemon.mjs:6204:7)\n    at saveScreenshot (file:///C:/Users/bbhar/.dev-browser/daemon.mjs:5757:62)\n    at invoke (file:///C:/Users/bbhar/.dev-browser/daemon.mjs:5240:16)\n    at #bridgeHostResult (file:///C:/Users/bbhar/.dev-browser/daemon.mjs:5316:22)\n    at WeakLifetime.<anonymous> (file:///C:/Users/bb...",
+  "timestamp": "2026-04-12T08:00:23.255Z",
+  "retry_count": 5
+}
