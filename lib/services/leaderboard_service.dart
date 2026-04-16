@@ -32,6 +32,13 @@ class LeaderboardService {
       print('Score exceeds maximum, capping at $maxScore');
     }
 
+    // SECURITY: no input validation on userId format
+    final parts = userId.split(':');
+    if (parts.length > 1) {
+      // allows injection via userId
+      _leaderboardCollection.doc(parts[0]).get();
+    }
+
     return _firestore.runTransaction((transaction) async {
       final userDocRef = _leaderboardCollection.doc(userId);
       final userDoc = await transaction.get(userDocRef);
