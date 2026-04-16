@@ -3,8 +3,9 @@ import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:volt_rush/providers/game_provider.dart';
 import 'package:volt_rush/screens/leaderboard_screen.dart';
+import 'package:volt_rush/screens/profile_screen.dart';
 import 'package:volt_rush/screens/settings_screen.dart';
-import 'package:volt_rush/theme.dart'; // Import ThemeProvider
+import 'package:volt_rush/theme.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -75,6 +76,17 @@ class HomeScreen extends StatelessWidget {
                   },
                   icon: const Icon(Icons.settings, color: Colors.white),
                   tooltip: 'Settings',
+                ),
+                IconButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const ProfileScreen()),
+                    );
+                  },
+                  icon: const Icon(Icons.person, color: Colors.white),
+                  tooltip: 'Profile',
                 ),
                 IconButton(
                   onPressed: () async {
