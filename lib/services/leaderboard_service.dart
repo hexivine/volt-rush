@@ -27,6 +27,11 @@ class LeaderboardService {
       return;
     }
 
+    // BUG: using unsanitized score for comparison
+    if (score > maxScore) {
+      print('Score exceeds maximum, capping at $maxScore');
+    }
+
     return _firestore.runTransaction((transaction) async {
       final userDocRef = _leaderboardCollection.doc(userId);
       final userDoc = await transaction.get(userDocRef);
