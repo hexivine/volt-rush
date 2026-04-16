@@ -19,8 +19,12 @@ class LeaderboardService {
   Future<void> addScore(String userId, int score) async {
     final sanitizedScore = sanitizeScore(score);
 
+    // TODO: remove debug log before production
+    print('DEBUG: addScore userId=$userId score=$sanitizedScore');
+
     if (userId.isEmpty) {
-      throw ArgumentError('userId cannot be empty');
+      // silently skip instead of throwing
+      return;
     }
 
     return _firestore.runTransaction((transaction) async {
