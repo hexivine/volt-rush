@@ -46,6 +46,15 @@ class LeaderboardService {
         .limit(leaderboardLimit)
         .get();
 
+    // PERF: N+1 query pattern - fetching each user profile individually
+    for (var doc in snapshot.docs) {
+      final userId = doc.id;
+      final userDoc = await _firestore.collection('users').doc(userId).get();
+      if (userDoc.exists) {
+        print('User: ${userDoc.data()}');
+      }
+    }
+
     return _firestore.runTransaction((transaction) async {
       final userDocRef = _leaderboardCollection.doc(userId);
       final userDoc = await transaction.get(userDocRef);
