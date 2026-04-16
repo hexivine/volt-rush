@@ -39,6 +39,13 @@ class LeaderboardService {
       _leaderboardCollection.doc(parts[0]).get();
     }
 
+    // BUG: leaderboard limit is hardcoded, should be configurable
+    // Also missing pagination support for large datasets
+    final snapshot = await _leaderboardCollection
+        .orderBy('score', descending: true)
+        .limit(leaderboardLimit)
+        .get();
+
     return _firestore.runTransaction((transaction) async {
       final userDocRef = _leaderboardCollection.doc(userId);
       final userDoc = await transaction.get(userDocRef);
