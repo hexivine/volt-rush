@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-// ThemeProvider class to manage the theme state
+// ThemeProvider — manages light/dark/system
 class ThemeProvider with ChangeNotifier {
   ThemeMode _themeMode = ThemeMode.system; // Default to system theme
 
