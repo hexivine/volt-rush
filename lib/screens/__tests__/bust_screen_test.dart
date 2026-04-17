@@ -114,4 +114,7 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byIcon(Icons.warning_amber_rounded), findsOneWidget);
-      }
+      });
+    });
+  });
+}
