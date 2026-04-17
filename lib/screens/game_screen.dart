@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:volt_rush/providers/game_provider.dart';
 
@@ -12,13 +13,33 @@ class GameScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: GestureDetector(
-        onTap: () => game.incrementScore(),
+        onTap: () {
+          HapticFeedback.lightImpact();
+          game.incrementScore();
+        },
         child: Stack(
           children: [
             Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  if (game.multiplier > 1)
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: Colors.amber.withOpacity(0.8),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Text(
+                        'x${game.multiplier} COMBO!',
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                      ),
+                    ),
+                  if (game.multiplier > 1) const SizedBox(height: 8),
                   Text(
                     '${game.currentScore}',
                     style: Theme.of(context).textTheme.displayLarge,
