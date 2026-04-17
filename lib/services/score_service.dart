@@ -9,8 +9,11 @@ class ScoreService {
 
     int previousBest = 0;
     if (existing.exists) {
-      previousBest = (existing.data() as Map<String, dynamic>)['score'] ?? 0;
-    }
+  final data = existing.data();
+  if (data != null) {
+    previousBest = (data['score'] as int?) ?? 0;
+  }
+}
 
     if (score > previousBest) {
       await docRef.set({
