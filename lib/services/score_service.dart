@@ -39,12 +39,18 @@ class ScoreService {
     }).toList();
   }
 
-  Future<void> resetAllScores() async {
-    final snapshot = await _firestore.collection('high_scores').get();
-    for (var doc in snapshot.docs) {
-      await doc.reference.delete();
-    }
+Future<void> resetAllScores({required bool confirmed}) async {
+  if (!confirmed) {
+    throw StateError('Reset requires confirmed=true parameter');
   }
+  // Implement soft-delete: add 'deleted' field instead
+  final batch = _firestore.batch();
+  final snapshot = await _firestore.collection('high_scores').get();
+  for (var doc in snapshot.docs) {
+    batch.update(doc.reference, {'deleted': true, 'deletedAt': FieldValue.serverTimestamp()});
+  }
+  await batch.commit();
+}
 
   Future<double> getPlayerWinRate(String userId) async {
     final gamesSnapshot = await _firestore
