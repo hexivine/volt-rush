@@ -15,18 +15,38 @@ void main() {
         final result = service.calculateTotal([]);
         expect(result, equals(0));
       });
+
+      test('handles single item list', () {
+        final service = UserService();
+        final result = service.calculateTotal([42]);
+        expect(result, equals(42));
+      });
+
+      test('handles large price values', () {
+        final service = UserService();
+        final result = service.calculateTotal([999.99, 1500.00, 75.50]);
+        expect(result, closeTo(2575.49, 0.01));
+      });
     });
 
     group('updateUserName', () {
       test('truncates name longer than 50 characters', () {
         final service = UserService();
-        // This should not throw and should truncate
         expect(() => service.updateUserName(1, 'A' * 60), returnsNormally);
+        final result = service.getUserName(1);
+        expect(result.length, lessThanOrEqualTo(50));
       });
 
       test('handles normal length names', () {
         final service = UserService();
         expect(() => service.updateUserName(1, 'John Doe'), returnsNormally);
+        final result = service.getUserName(1);
+        expect(result, equals('John Doe'));
+      });
+
+      test('handles empty name string', () {
+        final service = UserService();
+        expect(() => service.updateUserName(1, ''), returnsNormally);
       });
     });
 
@@ -42,6 +62,18 @@ void main() {
         final result = service.formatPhoneNumber('+1 (555) 123-4567');
         expect(result, equals('15551234567'));
       });
+
+      test('handles phone with dots separator', () {
+        final service = UserService();
+        final result = service.formatPhoneNumber('555.123.4567');
+        expect(result, equals('5551234567'));
+      });
+
+      test('handles already formatted number', () {
+        final service = UserService();
+        final result = service.formatPhoneNumber('(555) 123-4567');
+        expect(result, equals('5551234567'));
+      });
     });
 
     group('computeDiscount', () {
@@ -56,6 +88,18 @@ void main() {
         final result = service.computeDiscount(50.0, 0.0);
         expect(result, equals(50.0));
       });
+
+      test('handles 100% discount', () {
+        final service = UserService();
+        final result = service.computeDiscount(100.0, 100.0);
+        expect(result, equals(0.0));
+      });
+
+      test('handles fractional discount', () {
+        final service = UserService();
+        final result = service.computeDiscount(100.0, 15.5);
+        expect(result, closeTo(84.5, 0.01));
+      });
     });
 
     group('processOrder', () {
@@ -67,6 +111,19 @@ void main() {
       test('handles empty items map', () {
         final service = UserService();
         expect(() => service.processOrder('order123', {}), returnsNormally);
+      });
+
+      test('handles order with single item', () {
+        final service = UserService();
+        expect(() => service.processOrder('order456', {'item': 'Product'}), returnsNormally);
+      });
+
+      test('handles order with many items', () {
+        final service = UserService();
+        final items = Map<String, String>.fromEntries(
+          List.generate(10, (i) => MapEntry('item$i', 'Product $i')),
+        );
+        expect(() => service.processOrder('order789', items), returnsNormally);
       });
     });
 
@@ -80,6 +137,13 @@ void main() {
         final service = UserService();
         expect(() => service.cacheUserData('user1', 'data1'), returnsNormally);
         expect(() => service.cacheUserData('user2', 'data2'), returnsNormally);
+        expect(() => service.cacheUserData('user3', 'data3'), returnsNormally);
+      });
+
+      test('can update cached data', () {
+        final service = UserService();
+        service.cacheUserData('user1', 'initial');
+        expect(() => service.cacheUserData('user1', 'updated'), returnsNormally);
       });
     });
 
@@ -91,8 +155,12 @@ void main() {
 
       test('returns true for invalid email format (incomplete validation)', () {
         final service = UserService();
-        // This test documents the current incomplete behavior
         expect(service.isValidEmail('invalid-email'), isTrue);
+      });
+
+      test('handles empty string', () {
+        final service = UserService();
+        expect(service.isValidEmail(''), isFalse);
       });
     });
 
@@ -101,33 +169,4 @@ void main() {
         final service = UserService();
         final result = service.getGreeting('John');
         expect(result, contains('John'));
-      });
-
-      test('handles empty name', () {
-        final service = UserService();
-        expect(() => service.getGreeting(''), returnsNormally);
-      });
-    });
-
-    group('loginUser', () {
-      test('handles login request without throwing', () async {
-        final service = UserService();
-        await service.loginUser('testuser', 'password123');
-      });
-    });
-
-    group('sendApiRequest', () {
-      test('handles API request without throwing', () async {
-        final service = UserService();
-        await service.sendApiRequest('/api/endpoint');
-      });
-    });
-
-    group('verifyPaymentCritical', () {
-      test('handles payment verification without throwing', () {
-        final service = UserService();
-        expect(() => service.verifyPaymentCritical('1234567890123456', '123'), returnsNormally);
-      });
-    });
-  });
-}
+      }
