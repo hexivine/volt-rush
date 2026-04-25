@@ -130,7 +130,7 @@ describe('MaxIssuesTest', () => {
       const result = await new Promise<string>((resolve, reject) => {
         const proc = spawn('dart', [
           '-e',
-          "print(['a', 'b', 'c'].join(','));",
+          "print(['a', 'b', 'c'].join(','));" 
         ]);
         let output = '';
         proc.stdout.on('data', (data) => { output += data; });
