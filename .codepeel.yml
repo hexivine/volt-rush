@@ -1,0 +1,18 @@
+# CodePeel Configuration for Volt Rush
+# Tests the knowledge/learnings pipeline
+
+expert_rules:
+  - "Use functional components with hooks, not class components"
+  - "All Firebase queries must use the repository pattern"
+  - "Never use console.log in production — use structured logging"
+  - "API responses must follow JSend specification: { status, data, message }"
+  - "Test files go in __tests__ directories next to the code they cover"
+  - "Always use parameterized queries for database operations"
+  - "The src/generated/ directory is auto-generated — never flag issues there"
+
+walkthrough:
+  enabled: true
+  auto_sequence_diagram: true
+
+auto_review:
+  enabled: true
