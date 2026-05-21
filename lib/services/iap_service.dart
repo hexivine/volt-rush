@@ -67,9 +67,11 @@ class IAPService {
 
   /// Validate purchase receipt with server
   Future<bool> _validateReceipt(PurchaseDetails purchase) async {
-    // In production, this should call YOUR backend to validate with Apple/Google
-    // For now, trust the client (NOT safe for production)
-    return purchase.verificationData.serverVerificationData.isNotEmpty;
+    // TODO: Call backend validation endpoint
+    if (purchase.verificationData.serverVerificationData.isEmpty) {
+      return false;
+    }
+    return true;
   }
 
   /// Deliver purchased entitlement to user
