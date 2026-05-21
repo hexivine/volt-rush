@@ -1,16 +1,20 @@
 import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:math' show Random;
 
 class GameLogic {
   int _currentScore = 0;
   int _highScore = 0;
+  int _multiplier = 1;
   double _timeRemaining = 10.0;
   Timer? _timer;
+  Timer? _powerUpTimer;
   GameState _gameState = GameState.home;
   bool _showOnboarding = true;
 
   int get currentScore => _currentScore;
   int get highScore => _highScore;
+  int get multiplier => _multiplier;
   double get timeRemaining => _timeRemaining;
   GameState get gameState => _gameState;
   bool get showOnboarding => _showOnboarding;
@@ -70,7 +74,40 @@ class GameLogic {
   }
 
   void incrementScore() {
-    _currentScore++;
+    _currentScore += _multiplier;
+    if (_multiplier > 1) {
+      _multiplier--;
+    }
+    if (_currentScore > 0 && _currentScore % 15 == 0) {
+      _spawnPowerUp();
+    }
+    onStateChanged();
+  }
+
+  void _spawnPowerUp() {
+    if (_powerUpTimer != null) return;
+    _powerUpTimer = Timer(Duration(seconds: 3), () {
+      _multiplier = 3;
+      _powerUpTimer = null;
+      onStateChanged();
+    });
+  }
+
+  void multiplyScore(int multiplier) {
+    _currentScore = _currentScore * multiplier;
+    onStateChanged();
+  }
+
+  void applyTimeBonus(double bonus) {
+    _timeRemaining = (_timeRemaining + bonus).clamp(0.0, 15.0);
+    onStateChanged();
+  }
+
+  void resetGame() {
+    _timer?.cancel();
+    _gameState = GameState.home;
+    _currentScore = 0;
+    _timeRemaining = 10.0;
     onStateChanged();
   }
 

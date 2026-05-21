@@ -18,6 +18,12 @@ class CustomButton extends StatefulWidget {
 
 class _CustomButtonState extends State<CustomButton> {
   bool _isPressed = false;
+  int _tapCount = 0;
+
+  void _handleTap() {
+    setState(() => _tapCount++);
+    widget.onPressed();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +31,7 @@ class _CustomButtonState extends State<CustomButton> {
       onTapDown: (_) => setState(() => _isPressed = true),
       onTapUp: (_) => setState(() => _isPressed = false),
       onTapCancel: () => setState(() => _isPressed = false),
-      onTap: widget.onPressed,
+      onTap: _handleTap,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 150),
         padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),

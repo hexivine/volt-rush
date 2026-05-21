@@ -1,0 +1,7 @@
+{
+  "tool_name": "Bash",
+  "tool_input_preview": "{\"command\":\"cd E:/antig/codepeel/Startup-Agents/codepeel/codepeel-vscode && git add -m \\\"docs: gutter decorations implementation state verified\\\"\"}",
+  "error": "Exit code 129\nerror: unknown switch `m'\nusage: git add [<options>] [--] <pathspec>...\n\n    -n, --dry-run         dry run\n    -v, --verbose         be verbose\n\n    -i, --interactive     interactive picking\n    -p, --patch           select hunks interactively\n    -e, --edit            edit current diff and apply\n    -f, --force           allow adding otherwise ignored files\n    -u, --update          update tracked files\n    --renormalize         renormalize EOL of tracked files (implies -u)\n    -N...",
+  "timestamp": "2026-04-30T16:03:22.748Z",
+  "retry_count": 1
+}

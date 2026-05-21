@@ -8,6 +8,7 @@ import 'package:volt_rush/providers/game_provider.dart';
 import 'package:volt_rush/providers/auth_provider.dart';
 import 'package:volt_rush/providers/leaderboard_provider.dart';
 import 'package:volt_rush/screens/home_screen.dart';
+import 'package:volt_rush/screens/onboarding_screen.dart';
 import 'package:volt_rush/screens/game_screen.dart';
 import 'package:volt_rush/screens/banked_screen.dart';
 import 'package:volt_rush/screens/bust_screen.dart';
@@ -46,7 +47,7 @@ class MyApp extends StatelessWidget {
             home: Consumer<GameProvider>(
               builder: (context, game, child) {
                 if (game.showOnboarding) {
-                  return const HomeScreen();
+                  return const OnboardingScreen();
                 }
                 switch (game.gameState) {
                   case GameState.home:

@@ -19,10 +19,20 @@ class BustScreen extends StatelessWidget {
               'Bust!',
               style: Theme.of(context).textTheme.displayLarge?.copyWith(color: Colors.red),
             ),
+            const SizedBox(height: 20),
+            Text(
+              'You scored ${game.currentScore} points',
+              style: Theme.of(context).textTheme.headlineMedium,
+            ),
             const SizedBox(height: 50),
             ElevatedButton(
               onPressed: () => game.startGame(),
               child: const Text('Try Again'),
+            ),
+            const SizedBox(height: 20),
+            Text(
+              'High Score: ${game.highScore}',
+              style: Theme.of(context).textTheme.headlineSmall,
             ),
           ],
         ),
