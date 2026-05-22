@@ -1,13 +1,14 @@
-// Test file for settings validation
-// This file has intentional issues to test review preferences
+// Test file for securityOnly mode validation
+// With securityOnly=true, only security findings should appear
+// Best practice issues (var, long functions) should NOT be flagged
 
 import { readFileSync } from 'fs';
 
-// Using var (should be flagged by custom instructions)
+// Using var (should NOT be flagged in securityOnly mode)
 var globalCounter = 0;
 var tempData: any = null;
 
-// Long function (>20 lines - should be flagged by custom instructions)
+// Long function (should NOT be flagged in securityOnly mode)
 export function processUserData(input: any) {
   var result: any = {};
   var errors: string[] = [];
@@ -50,13 +51,13 @@ export function processUserData(input: any) {
   return { result, errors, count: globalCounter };
 }
 
-// SQL injection vulnerability (security issue)
+// SQL injection vulnerability (SHOULD be flagged - security issue)
 export function getUserById(id: string) {
   const query = `SELECT * FROM users WHERE id = '${id}'`;
   return query;
 }
 
-// Hardcoded secret (security issue)
+// Hardcoded secret (SHOULD be flagged - security issue)
 const API_KEY = 'sk-proj-abc123def456ghi789';
 
 export function callExternalApi(data: any) {
@@ -66,7 +67,7 @@ export function callExternalApi(data: any) {
   });
 }
 
-// Another function using var
+// Performance issue (should NOT be flagged in securityOnly mode)
 export function calculateTotal(items: any[]) {
   var total = 0;
   for (var i = 0; i < items.length; i++) {
@@ -75,10 +76,8 @@ export function calculateTotal(items: any[]) {
   return total;
 }
 
-// One more var usage to test
-var debugMode = true;
-export function logDebug(msg: string) {
-  if (debugMode) {
-    console.log(`[DEBUG] ${msg}`);
-  }
+// Path traversal vulnerability (SHOULD be flagged - security issue)
+export function readUserFile(filename: string) {
+  const content = readFileSync(`/data/users/${filename}`);
+  return content.toString();
 }
