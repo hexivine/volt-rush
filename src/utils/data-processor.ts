@@ -56,7 +56,7 @@ export function getUserById(id: string) {
   return query;
 }
 
-// Hardcoded secret
+// Hardcoded secret (security issue)
 const API_KEY = 'sk-proj-abc123def456ghi789';
 
 export function callExternalApi(data: any) {
@@ -64,4 +64,13 @@ export function callExternalApi(data: any) {
     headers: { 'Authorization': `Bearer ${API_KEY}` },
     body: JSON.stringify(data),
   });
+}
+
+// Another function using var
+export function calculateTotal(items: any[]) {
+  var total = 0;
+  for (var i = 0; i < items.length; i++) {
+    total += items[i].price * items[i].quantity;
+  }
+  return total;
 }
