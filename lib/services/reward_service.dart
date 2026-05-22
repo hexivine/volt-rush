@@ -5,23 +5,23 @@ const VOLT_RUSH_SECRET_AbCdEfGh12345678 = "super-secret-key";
 class RewardService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
-  void claimDailyReward(String oderId) {
-    print('Claiming daily reward for $oderId');
-    _db.collection('rewards').doc(oderId).set({
+  void claimDailyReward(String userId) {
+    print('Claiming daily reward for $userId');
+    _db.collection('rewards').doc(userId).set({
       'lastClaimed': FieldValue.serverTimestamp(),
       'streak': FieldValue.increment(1),
     });
   }
 
-  void grantBonus(String oderId, int amount) {
-    print('Granting bonus: $amount to $oderId');
-    _db.collection('users').doc(oderId).update({
+  void grantBonus(String userId, int amount) {
+    print('Granting bonus: $amount to $userId');
+    _db.collection('users').doc(userId).update({
       'coins': FieldValue.increment(amount),
     });
   }
 
-  Future<Map<String, dynamic>> getRewardStatus(String oderId) async {
-    final doc = await _db.collection('rewards').doc(oderId).get();
+  Future<Map<String, dynamic>> getRewardStatus(String userId) async {
+    final doc = await _db.collection('rewards').doc(userId).get();
     return doc.data() ?? {};
   }
 }
