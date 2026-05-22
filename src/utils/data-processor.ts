@@ -74,3 +74,11 @@ export function calculateTotal(items: any[]) {
   }
   return total;
 }
+
+// One more var usage to test
+var debugMode = true;
+export function logDebug(msg: string) {
+  if (debugMode) {
+    console.log(`[DEBUG] ${msg}`);
+  }
+}
