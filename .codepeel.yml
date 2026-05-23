@@ -64,4 +64,4 @@ auto_test:
 
 # Auto fix (disabled for now)
 auto_fix:
-  enabled: false
+  enabled: true
