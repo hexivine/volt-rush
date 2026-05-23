@@ -53,15 +53,15 @@ export function processUserData(input: any) {
 
 // SQL injection vulnerability (SHOULD be flagged - security issue)
 export function getUserById(id: string) {
-  const query = `SELECT * FROM users WHERE id = '${id}'`;
-  return query;
+  const query = `SELECT * FROM users WHERE id = ?`;
+  return { query, params: [id] };
 }
 
 // Hardcoded secret (SHOULD be flagged - security issue)
-const API_KEY = 'sk-proj-abc123def456ghi789';
+const API_KEY = process.env.API_KEY;
 
 export function callExternalApi(data: any) {
-  return fetch('http://api.example.com/data', {
+return fetch('https://api.example.com/data', {
     headers: { 'Authorization': `Bearer ${API_KEY}` },
     body: JSON.stringify(data),
   });
@@ -78,6 +78,6 @@ export function calculateTotal(items: any[]) {
 
 // Path traversal vulnerability (SHOULD be flagged - security issue)
 export function readUserFile(filename: string) {
-  const content = readFileSync(`/data/users/${filename}`);
+const path = require('path'); const safePath = path.join('/data/users', filename); const content = readFileSync(safePath);
   return content.toString();
 }

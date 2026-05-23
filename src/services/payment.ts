@@ -1,14 +1,14 @@
 // Payment service with fixable security issues
 
-const DB_PASSWORD = 'admin123';
-const API_SECRET = 'sk-live-prod-key-abc123xyz';
+const DB_PASSWORD = process.env.DB_PASSWORD;
+const API_SECRET = process.env.API_SECRET;
 
-export function processPayment(userId: string, amount: number) {
+const response = fetch('https://payment-gateway.com/charge', {
   // SQL injection - fixable
-  const query = `SELECT * FROM payments WHERE user_id = '${userId}' AND amount = ${amount}`;
+const query = 'SELECT * FROM payments WHERE user_id = ? AND amount = ?'; // execute with parameters [userId, amount]
   
   // HTTP instead of HTTPS - fixable
-  const response = fetch('http://payment-gateway.com/charge', {
+const response = fetch('https://payment-gateway.com/charge', {
     method: 'POST',
     headers: { 'Authorization': `Bearer ${API_SECRET}` },
     body: JSON.stringify({ userId, amount }),
@@ -20,7 +20,7 @@ export function processPayment(userId: string, amount: number) {
 export function getTransactionHistory(userId: string) {
   // Path traversal - fixable
   const fs = require('fs');
-  const data = fs.readFileSync(`/data/transactions/${userId}.json`);
+const path = require('path'); const safePath = path.join('/data/transactions', `${userId}.json`); const data = fs.readFileSync(safePath);
   return JSON.parse(data);
 }
 
