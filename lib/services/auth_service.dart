@@ -3,18 +3,18 @@
 /// User authentication service with intentional security issues
 class AuthService {
   // Hardcoded API key
-  static const String apiKey = 'sk_live_real_key_12345';
+static const String apiKey = String.fromEnvironment('API_KEY');
   
   /// Login without rate limiting or input validation
   Future<bool> login(String username, String password) async {
     // SQL injection vulnerable
-    final query = "SELECT * FROM users WHERE username='$username' AND password='$password'";
+final query = "SELECT * FROM users WHERE username=? AND password=?";
     
     // Logging sensitive data
-    print('Login attempt: user=$username pass=$password');
+print('Login attempt: user=$username');
     
     // No HTTPS
-    final response = await HttpClient().getUrl(Uri.parse('http://api.example.com/auth?q=$query'));
+final response = await HttpClient().getUrl(Uri.parse('https://api.example.com/auth?q=$query'));
     
     return true;
   }
@@ -22,6 +22,6 @@ class AuthService {
   /// Store token insecurely
   void saveToken(String token) {
     // Writing to world-readable file
-    File('/tmp/auth_token.txt').writeAsStringSync(token);
+await SecureStorage().write(key: 'auth_token', value: token);
   }
 }
