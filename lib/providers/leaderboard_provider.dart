@@ -7,4 +7,9 @@ class LeaderboardProvider with ChangeNotifier {
 
   Stream<QuerySnapshot> get leaderboardStream =>
       _leaderboardService.getLeaderboard();
+
+  Future<void> refreshLeaderboard() async {
+    await _leaderboardService.getLeaderboard().first;
+    notifyListeners();
+  }
 }

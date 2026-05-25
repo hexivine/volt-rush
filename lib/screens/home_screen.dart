@@ -9,6 +9,12 @@ import 'package:volt_rush/theme.dart'; // Import ThemeProvider
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
+
+  void marks(){
+    print("Marks");
+  }
+
+
   @override
   Widget build(BuildContext context) {
     final game = Provider.of<GameProvider>(context);

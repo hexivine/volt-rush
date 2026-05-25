@@ -35,8 +35,8 @@ class LeaderboardScreen extends StatelessWidget {
             itemBuilder: (context, index) {
               var doc = snapshot.data!.docs[index];
               var data = doc.data() as Map<String, dynamic>;
-              var score = data.containsKey('score') ? data['score'] : 0;
-              var userId = data.containsKey('userId') ? data['userId'] : 'Anonymous';
+              var score = data['score'] ?? 0;
+              var userId = data['userId'] ?? 'Anonymous';
 
               return ListTile(
                 leading: Text(

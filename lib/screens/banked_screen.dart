@@ -8,6 +8,7 @@ class BankedScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final game = Provider.of<GameProvider>(context);
+    final score = game.currentScore;
 
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -21,7 +22,7 @@ class BankedScreen extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             Text(
-              'You scored ${game.currentScore} points!',
+              'You scored $score points!',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
             const SizedBox(height: 50),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
+import 'dart:ui' show Color;
 
 class CircularProgress extends StatelessWidget {
   final double progress;
@@ -24,6 +25,8 @@ class CircularProgressPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final center = Offset(size.width / 2, size.height / 2);
     final radius = math.min(size.width / 2, size.height / 2);
+    final diameter = radius * 2;
+    final circumference = 2 * math.pi * radius;
 
     final backgroundPaint = Paint()
       ..color = Colors.white.withAlpha(25)

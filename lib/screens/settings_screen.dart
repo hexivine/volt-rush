@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:volt_rush/providers/game_provider.dart';
+import 'package:flutter/scheduler.dart' show TargetPlatform;
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -9,6 +10,7 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final game = Provider.of<GameProvider>(context, listen: false);
+    final platform = Theme.of(context).platform;
 
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -38,6 +40,7 @@ class SettingsScreen extends StatelessWidget {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
+                debugPrint('Current high score before reset: ${game.highScore}');
                 game.resetHighScore();
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
@@ -46,6 +49,11 @@ class SettingsScreen extends StatelessWidget {
                 );
               },
               child: const Text('Reset'),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Back'),
             ),
           ],
         ),

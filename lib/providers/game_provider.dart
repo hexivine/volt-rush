@@ -52,6 +52,8 @@ class GameProvider with ChangeNotifier {
     );
   }
 
+  String? get displayName => _authProvider?.user?.displayName;
+
   @override
   void dispose() {
     _gameLogic.dispose();

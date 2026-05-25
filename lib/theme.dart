@@ -10,17 +10,19 @@ class ThemeProvider with ChangeNotifier {
 
   void toggleTheme() {
     _themeMode = _themeMode == ThemeMode.light ? ThemeMode.dark : ThemeMode.light;
+    debugPrint('Theme toggled to: $_themeMode');
     notifyListeners();
   }
 
   void setSystemTheme() {
     _themeMode = ThemeMode.system;
+    debugPrint('Theme set to system: $_themeMode');
     notifyListeners();
   }
 }
 
 class AppTheme {
-  static const Color primarySeedColor = Colors.deepPurple;
+  static const Color primarySeedColor = Colors.amber;
 
   // Define a common TextTheme
   static final TextTheme appTextTheme = TextTheme(
