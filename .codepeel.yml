@@ -1,67 +1,36 @@
-# CodePeel Configuration for volt-rush
-# Testing all config options
-
-# Files to exclude from review
+# CodePeel Configuration for Volt Rush
 ignore_paths:
-  - "scripts/**"
-  - "*.generated.dart"
   - "build/**"
+  - "*.generated.dart"
 
-# Custom instructions for the AI reviewer
 custom_instructions: |
-  This is a Flutter mobile game app called Volt Rush.
-  We use Provider for state management.
-  All Firestore operations should use transactions for writes.
-  Prefer const constructors for widgets.
+  This is a Flutter mobile game app called Volt Rush using Provider for state management.
+  All Firestore writes MUST use transactions (see leaderboard_service.dart for the pattern).
+  Services should be injected via Provider, never instantiated directly in State classes.
+  Use FieldValue.serverTimestamp() for all timestamp fields, never DateTime.now().
 
-# Expert rules — enforced on every review
-expert_rules:
-  - "Never use print() in production code — use AppLogger instead"
-  - "All public methods must have documentation comments"
-  - "Firestore writes must use batch or transaction, never raw set/update"
+rules:
+  - id: firestore-use-transactions
+    pattern: "\\.(set|update|delete|add)\\("
+    message: "Firestore writes must use batch or transaction for atomicity."
+    severity: high
+    paths: ["lib/services/**"]
 
-# Review behavior
-strictMode: false
-securityOnly: false
-ignoreFormatting: true
+  - id: no-datetime-now-in-firestore
+    pattern: "DateTime\\.now\\(\\)"
+    message: "Use FieldValue.serverTimestamp() for Firestore timestamps."
+    severity: medium
+    paths: ["lib/services/**"]
 
-# Walkthrough settings
-walkthrough:
-  enabled: true
-  auto_sequence_diagram: true
-  include_affected_files: true
-  risk_assessment: true
+  - id: no-service-in-state
+    pattern: "Service\\(\\)"
+    message: "Don't instantiate services directly. Use Provider for dependency injection."
+    severity: high
+    paths: ["lib/screens/**"]
 
-# Auto-review settings
 auto_review:
   enabled: true
-  auto_incremental_review: true
-  base_branches:
-    - master
-    - main
-  ignore_title_keywords:
-    - WIP
-    - "DO NOT REVIEW"
   profile: assertive
 
-# Chat
-chat:
-  auto_reply: true
-
-# Security
-security:
-  custom_patterns:
-    - "VOLT_RUSH_SECRET_[A-Za-z0-9]{16}"
-
-# Auto description
-auto_description:
-  enabled: true
-  postToGithub: false
-
-# Auto test (disabled for now)
-auto_test:
-  enabled: false
-
-# Auto fix (disabled for now)
 auto_fix:
   enabled: true
