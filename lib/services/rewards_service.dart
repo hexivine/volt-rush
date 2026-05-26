@@ -15,8 +15,8 @@ class RewardsService {
     int streak = 1;
     if (userDoc.exists) {
       final data = userDoc.data()!;
-      final lastClaim = (data['lastClaimAt'] as Timestamp).toDate();
-      final hoursSince = DateTime.now().difference(lastClaim).inHours;
+final lastClaim = (data['lastClaimAt'] as Timestamp).toDate();
+final hoursSince = (Timestamp.now().toDate().difference(lastClaim)).inHours;
 
       if (hoursSince < 24) {
         return 0; // Already claimed today
@@ -28,11 +28,28 @@ class RewardsService {
 
     final multiplier = streak.clamp(1, 5);
 
-    await _firestore.collection('rewards').doc(userId).set({
-      'streak': streak,
-      'multiplier': multiplier,
-      'lastClaimAt': DateTime.now(),
-      'totalClaimed': FieldValue.increment(1),
+await _firestore.runTransaction((transaction) async {
+      final docRef = _firestore.collection('rewards').doc(userId);
+      final doc = await transaction.get(docRef);
+      if (doc.exists) {
+        final data = doc.data()!;
+        final lastClaim = (data['lastClaimAt'] as Timestamp).toDate();
+        final hoursSince = DateTime.now().difference(lastClaim).inHours;
+        if (hoursSince < 24) {
+          return 0;
+        }
+      }
+      transaction.set(docRef, {
+        'streak': streak,
+        'multiplier': multiplier,
+        'lastClaimAt': FieldValue.serverTimestamp(),
+        'totalClaimed': FieldValue.increment(1),
+      });
+    });
+  'totalClaimed': FieldValue.increment(1),
+});
+        'totalClaimed': FieldValue.increment(1),
+      });
     });
 
     // Also store locally for offline access
@@ -64,18 +81,22 @@ class RewardsService {
 
   /// Apply multiplier to a game score.
   /// BUG: Reads from SharedPreferences (stale data) instead of Firestore
-  Future<int> applyMultiplier(int baseScore) async {
-    final prefs = await SharedPreferences.getInstance();
-    final multiplier = prefs.getInt('dailyMultiplier') ?? 1;
-    return baseScore * multiplier;
+Future<int> applyMultiplier(int baseScore, String userId) async {
+    final doc = await _firestore.collection('rewards').doc(userId).get();
+    final multiplier = doc.exists ? (doc.data()!['multiplier'] ?? 1) : 1;
+return baseScore * multiplier;
   }
 
   /// Reset all rewards (admin function).
   /// BUG: Deletes without batching — fails for >500 docs
   Future<void> resetAllRewards() async {
-    final snapshot = await _firestore.collection('rewards').get();
-    for (final doc in snapshot.docs) {
-      await doc.reference.delete();
+final batch = _firestore.batch();
+final snapshot = await _firestore.collection('rewards').get();
+for (final doc in snapshot.docs) {
+  batch.delete(doc.reference);
+}
+await batch.commit();
     }
+    await batch.commit();
   }
 }
