@@ -20,6 +20,36 @@ expert_rules:
   - "All public methods must have documentation comments"
   - "Firestore writes must use batch or transaction, never raw set/update"
 
+# Custom compliance rules — structured enforcement
+rules:
+  - id: no-hardcoded-secrets
+    pattern: "(password|secret|api_key|token)\\s*=\\s*['\"]"
+    message: "Never hardcode secrets. Use environment variables or a secrets manager."
+    severity: critical
+    paths: ["src/**", "lib/**"]
+
+  - id: no-eval
+    pattern: "eval\\("
+    message: "eval() is forbidden — it enables code injection attacks."
+    severity: critical
+
+  - id: no-http-urls
+    pattern: "http://"
+    message: "Use HTTPS instead of HTTP for all external requests."
+    severity: high
+    exclude_paths: ["**/*.test.*", "**/*.spec.*"]
+
+  - id: require-error-handling
+    pattern: "catch\\s*\\(\\s*\\)"
+    message: "Empty catch blocks swallow errors. Log or handle the error."
+    severity: medium
+
+  - id: no-console-log
+    pattern: "console\\.log"
+    message: "Use structured logging (AppLogger) instead of console.log in production code."
+    severity: low
+    exclude_paths: ["**/*.test.*", "scripts/**"]
+
 # Review behavior
 strictMode: false
 securityOnly: false
