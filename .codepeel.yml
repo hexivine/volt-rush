@@ -1,67 +1,44 @@
-# CodePeel Configuration for volt-rush
-# Testing all config options
-
-# Files to exclude from review
+# CodePeel Configuration
 ignore_paths:
-  - "scripts/**"
-  - "*.generated.dart"
   - "build/**"
+  - "*.generated.dart"
 
-# Custom instructions for the AI reviewer
 custom_instructions: |
-  This is a Flutter mobile game app called Volt Rush.
-  We use Provider for state management.
-  All Firestore operations should use transactions for writes.
-  Prefer const constructors for widgets.
+  This is a Flutter game app. Use structured logging, not console.log.
+  All API calls must use HTTPS.
 
-# Expert rules — enforced on every review
-expert_rules:
-  - "Never use print() in production code — use AppLogger instead"
-  - "All public methods must have documentation comments"
-  - "Firestore writes must use batch or transaction, never raw set/update"
+rules:
+  - id: no-hardcoded-secrets
+    pattern: "(password|secret|api_key|token)\\s*=\\s*['\"][^'\"]{8,}"
+    message: "Hardcoded secrets detected. Use environment variables."
+    severity: critical
+    paths: ["src/**"]
 
-# Review behavior
-strictMode: false
-securityOnly: false
-ignoreFormatting: true
+  - id: no-eval
+    pattern: "\\beval\\s*\\("
+    message: "eval() is forbidden — use JSON.parse() instead."
+    severity: critical
 
-# Walkthrough settings
-walkthrough:
-  enabled: true
-  auto_sequence_diagram: true
-  include_affected_files: true
-  risk_assessment: true
+  - id: no-http
+    pattern: "http://"
+    message: "Use HTTPS for all external requests."
+    severity: high
+    exclude_paths: ["**/*.test.*"]
 
-# Auto-review settings
+  - id: no-console
+    pattern: "console\\.(log|warn|error)"
+    message: "Use AppLogger instead of console methods."
+    severity: low
+    exclude_paths: ["**/*.test.*"]
+
+  - id: no-empty-catch
+    pattern: "catch\\s*\\(\\s*\\)"
+    message: "Empty catch blocks hide errors. Handle or log them."
+    severity: medium
+
 auto_review:
   enabled: true
-  auto_incremental_review: true
-  base_branches:
-    - master
-    - main
-  ignore_title_keywords:
-    - WIP
-    - "DO NOT REVIEW"
   profile: assertive
 
-# Chat
-chat:
-  auto_reply: true
-
-# Security
-security:
-  custom_patterns:
-    - "VOLT_RUSH_SECRET_[A-Za-z0-9]{16}"
-
-# Auto description
-auto_description:
-  enabled: true
-  postToGithub: false
-
-# Auto test (disabled for now)
-auto_test:
-  enabled: false
-
-# Auto fix (disabled for now)
 auto_fix:
   enabled: true
