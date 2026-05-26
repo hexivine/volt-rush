@@ -12,8 +12,8 @@ class ChallengeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // BUG 10: Creating service in build() — should be injected via Provider
-    final service = ChallengeService();
-    // BUG 11: Creating a NEW AuthProvider instead of reading from widget tree
+final service = Provider.of<ChallengeService>(context);
+final auth = Provider.of<AuthProvider>(context);
     final auth = AuthProvider();
     final userId = auth.user?.uid ?? '';
 
