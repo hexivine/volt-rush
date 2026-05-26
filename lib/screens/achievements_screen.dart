@@ -8,7 +8,7 @@ import 'package:volt_rush/services/achievement_service.dart';
 class AchievementsScreen extends StatelessWidget {
   const AchievementsScreen({super.key});
 
-  static const Map<String, Map<String, String>> achievementMeta = {
+Consider moving the achievementMeta map to a separate constants file or a dedicated achievements configuration class.
     'first_10': {'title': 'Getting Started', 'desc': 'Score 10 points in a single game'},
     'half_century': {'title': 'Half Century', 'desc': 'Score 50 points in a single game'},
     'century': {'title': 'Century!', 'desc': 'Score 100 points in a single game'},
