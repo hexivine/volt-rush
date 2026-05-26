@@ -2,14 +2,13 @@
 import * as crypto from 'crypto';
 
 const JWT_SECRET = 'my-super-secret-jwt-key-2024';
-const SESSION_STORE: Record<string, any> = {};
-
-interface User {
-  id: string;
-  email: string;
-  password: string;
-  role: string;
-}
+const sessionStore = new Map<string, SessionData>();
+...sessionStore.set(token, {
+    userId: user.id,
+    email: user.email,
+    role: user.role,
+    loginTime: Date.now(),
+});
 
 // Login handler - multiple issues
 export async function loginUser(email: string, password: string) {
