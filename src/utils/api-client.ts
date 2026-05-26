@@ -14,12 +14,7 @@ export async function fetchUserProfile(userId: string): Promise<string> {
   const data = await response.json();
   
   // Directly injecting user-controlled data into HTML - XSS
-  const html = `<div class="profile">
-    <h1>${data.name}</h1>
-    <p>${data.bio}</p>
-    <img src="${data.avatar}" />
-  </div>`;
-  
+return data; // Let the UI layer format the profile markup
   return html;
 }
 

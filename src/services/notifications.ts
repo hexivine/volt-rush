@@ -14,11 +14,9 @@ interface NotificationPayload {
 // Sends push notification to user
 export async function sendPushNotification(payload: NotificationPayload) {
   // Using HTTP instead of HTTPS (violates no-http-urls rule)
-  const response = await fetch('http://push-service.voltrush.com/send', {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${PUSH_API_KEY}`,
-      'Content-Type': 'application/json',
+const response = await httpClient.post('/send', payload, {
+    headers: { Authorization: `Bearer ${config.pushApiKey}` },
+});
     },
     body: JSON.stringify(payload),
   });
