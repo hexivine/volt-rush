@@ -11,24 +11,22 @@ class AchievementService {
     if (userId == null) return;
 
     // BUG: No transaction — race condition if called concurrently
-    final doc = await _firestore
-        .collection('users')
-        .doc(userId)
-        .collection('achievements')
-        .doc(achievementId)
-        .get();
-
-    if (!doc.exists) {
-      await _firestore
+await _firestore.runTransaction((transaction) async {
+      final docRef = _firestore
           .collection('users')
           .doc(userId)
           .collection('achievements')
-          .doc(achievementId)
-          .set({
-        'unlockedAt': FieldValue.serverTimestamp(),
-        'achievementId': achievementId,
-      });
-    }
+          .doc(achievementId);
+
+      final doc = await transaction.get(docRef);
+
+      if (!doc.exists) {
+        await transaction.set(docRef, {
+          'unlockedAt': FieldValue.serverTimestamp(),
+          'achievementId': achievementId,
+        });
+      }
+    });
   }
 
   /// Gets all achievements for a user.
@@ -62,15 +60,34 @@ class AchievementService {
 
   /// Delete all achievements for a user (used in account reset).
   Future<void> clearAchievements(String userId) async {
-    final snapshot = await _firestore
+final snapshot = await _firestore
         .collection('users')
         .doc(userId)
         .collection('achievements')
         .get();
 
-    // BUG: Deleting in a loop without batching — will fail for >500 docs
+    final batch = _firestore.batch();
+
     for (final doc in snapshot.docs) {
-      await doc.reference.delete();
+      batch.delete(doc.reference);
     }
+
+    await batch.commit();
+    for (final doc in snapshot.docs) {
+      batch.delete(doc.reference);
+    }
+
+    await batch.commit();
+        .collection('users')
+        .doc(userId)
+        .collection('achievements')
+        .get();
+
+    for (final doc in snapshot.docs) {
+      batch.delete(doc.reference);
+    }
+
+    await batch.commit();
+  }
   }
 }

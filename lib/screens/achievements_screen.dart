@@ -27,7 +27,7 @@ class AchievementsScreen extends StatelessWidget {
       );
     }
 
-    final service = AchievementService();
+final service = context.read<AchievementService>();
 
     return Scaffold(
       appBar: AppBar(
