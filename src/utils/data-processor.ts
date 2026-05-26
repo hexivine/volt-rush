@@ -53,7 +53,7 @@ export function processUserData(input: any) {
 
 // SQL injection vulnerability (SHOULD be flagged - security issue)
 export function getUserById(id: string) {
-  const query = `SELECT * FROM users WHERE id = '${id}'`;
+const query = `SELECT * FROM users WHERE id = ?`;
   return query;
 }
 
