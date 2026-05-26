@@ -1,0 +1,76 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+/// Service for managing player achievements in Volt Rush.
+/// Tracks milestones like first game, high scores, streaks, etc.
+class AchievementService {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  /// Unlocks an achievement for a user.
+  /// Does NOT use a transaction — can cause duplicate unlocks on concurrent calls.
+  Future<void> unlockAchievement(String? userId, String achievementId) async {
+    if (userId == null) return;
+
+    // BUG: No transaction — race condition if called concurrently
+    final doc = await _firestore
+        .collection('users')
+        .doc(userId)
+        .collection('achievements')
+        .doc(achievementId)
+        .get();
+
+    if (!doc.exists) {
+      await _firestore
+          .collection('users')
+          .doc(userId)
+          .collection('achievements')
+          .doc(achievementId)
+          .set({
+        'unlockedAt': FieldValue.serverTimestamp(),
+        'achievementId': achievementId,
+      });
+    }
+  }
+
+  /// Gets all achievements for a user.
+  Stream<QuerySnapshot> getAchievements(String userId) {
+    return _firestore
+        .collection('users')
+        .doc(userId)
+        .collection('achievements')
+        .orderBy('unlockedAt', descending: true)
+        .snapshots();
+  }
+
+  /// Check and award achievements based on score.
+  /// Called after every game ends.
+  Future<void> checkScoreAchievements(String? userId, int score, int highScore) async {
+    if (userId == null) return;
+
+    if (score >= 10) {
+      unlockAchievement(userId, 'first_10');
+    }
+    if (score >= 50) {
+      unlockAchievement(userId, 'half_century');
+    }
+    if (score >= 100) {
+      unlockAchievement(userId, 'century');
+    }
+    if (highScore >= 200) {
+      unlockAchievement(userId, 'legendary');
+    }
+  }
+
+  /// Delete all achievements for a user (used in account reset).
+  Future<void> clearAchievements(String userId) async {
+    final snapshot = await _firestore
+        .collection('users')
+        .doc(userId)
+        .collection('achievements')
+        .get();
+
+    // BUG: Deleting in a loop without batching — will fail for >500 docs
+    for (final doc in snapshot.docs) {
+      await doc.reference.delete();
+    }
+  }
+}
