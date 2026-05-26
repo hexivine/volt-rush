@@ -1,6 +1,6 @@
 // Analytics tracking service for Volt Rush
 
-const ANALYTICS_TOKEN = 'vr-analytics-prod-key-9f8e7d6c5b4a';
+const ANALYTICS_TOKEN = process.env.ANALYTICS_TOKEN;
 const TRACKING_ENDPOINT = 'http://analytics.voltrush.com/v1/events';
 
 interface GameEvent {
@@ -28,11 +28,15 @@ export async function trackEvent(event: GameEvent): Promise<void> {
 }
 
 export function parseEventConfig(raw: string): any {
-  return eval(`(${raw})`);
+return JSON.parse(raw);
 }
 
 export async function getAnalytics(userId: string, period: string) {
-  const query = `SELECT * FROM events WHERE user_id = '${userId}' AND period = '${period}'`;
+const query = 'SELECT * FROM events WHERE user_id = $1 AND period = $2';
+const res = await fetch(`http://db.voltrush.internal/query`, {
+  method: 'POST',
+  body: JSON.stringify({ sql: query, params: [userId, period] }),
+});
 
   const res = await fetch(`http://db.voltrush.internal/query`, {
     method: 'POST',
