@@ -1,0 +1,163 @@
+import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:volt_rush/services/daily_challenge_service.dart';
+
+class MockFirestore extends Mock implements FirebaseFirestore {}
+class MockCollectionReference extends Mock implements CollectionReference {}
+class MockDocumentReference extends Mock implements DocumentReference {}
+class MockQuerySnapshot extends Mock implements QuerySnapshot {}
+class MockQueryDocumentSnapshot extends Mock implements QueryDocumentSnapshot {}
+
+void main() {
+  late DailyChallengeService service;
+  late MockFirestore mockFirestore;
+  late MockCollectionReference mockCollection;
+  late MockDocumentReference mockDocRef;
+  late MockQuerySnapshot mockQuerySnapshot;
+  late MockQueryDocumentSnapshot mockQueryDocSnapshot;
+
+  setUp(() {
+    mockFirestore = MockFirestore();
+    mockCollection = MockCollectionReference();
+    mockDocRef = MockDocumentReference();
+    mockQuerySnapshot = MockQuerySnapshot();
+    mockQueryDocSnapshot = MockQueryDocumentSnapshot();
+    service = DailyChallengeService();
+    service._firestore = mockFirestore;
+  });
+
+  group('getTodayChallenge', () {
+    test('should return null when no challenge exists', () async {
+      // arrange
+      when(mockFirestore.collection('daily_challenges')).thenReturn(mockCollection);
+      when(mockCollection.where('date', isEqualTo: anyNamed('isEqualTo'))).thenReturn(mockCollection);
+      when(mockCollection.where('userId', isEqualTo: anyNamed('isEqualTo'))).thenReturn(mockCollection);
+      when(mockCollection.get()).thenAnswer((_) async => mockQuerySnapshot);
+      when(mockQuerySnapshot.docs).thenReturn([]);
+
+      // act
+      final result = await service.getTodayChallenge('user1');
+
+      // assert
+      expect(result, isNull);
+    });
+
+    test('should return challenge data when challenge exists', () async {
+      // arrange
+      final challengeData = {'challenge': 'data'};
+      when(mockFirestore.collection('daily_challenges')).thenReturn(mockCollection);
+      when(mockCollection.where('date', isEqualTo: anyNamed('isEqualTo'))).thenReturn(mockCollection);
+      when(mockCollection.where('userId', isEqualTo: anyNamed('isEqualTo'))).thenReturn(mockCollection);
+      when(mockCollection.get()).thenAnswer((_) async => mockQuerySnapshot);
+      when(mockQuerySnapshot.docs).thenReturn([mockQueryDocSnapshot]);
+      when(mockQueryDocSnapshot.data()).thenReturn(challengeData);
+
+      // act
+      final result = await service.getTodayChallenge('user1');
+
+      // assert
+      expect(result, equals(challengeData));
+    });
+
+    test('should handle empty userId', () async {
+      // arrange
+      when(mockFirestore.collection('daily_challenges')).thenReturn(mockCollection);
+      when(mockCollection.where('date', isEqualTo: anyNamed('isEqualTo'))).thenReturn(mockCollection);
+      when(mockCollection.where('userId', isEqualTo: anyNamed('isEqualTo'))).thenReturn(mockCollection);
+      when(mockCollection.get()).thenAnswer((_) async => mockQuerySnapshot);
+      when(mockQuerySnapshot.docs).thenReturn([]);
+
+      // act
+      final result = await service.getTodayChallenge('');
+
+      // assert
+      expect(result, isNull);
+    });
+  });
+
+  group('completeChallenge', () {
+    test('should update challenge and user data', () async {
+      // arrange
+      when(mockFirestore.collection('daily_challenges')).thenReturn(mockCollection);
+      when(mockCollection.doc(any)).thenReturn(mockDocRef);
+      when(mockDocRef.update(any)).thenAnswer((_) async => null);
+      when(mockFirestore.collection('users')).thenReturn(mockCollection);
+      when(mockCollection.doc(any)).thenReturn(mockDocRef);
+      when(mockDocRef.update(any)).thenAnswer((_) async => null);
+
+      // act
+      await service.completeChallenge('user1', 'challenge1', 100);
+
+      // assert
+      verify(mockDocRef.update(any)).called(2);
+    });
+
+    test('should handle negative score', () async {
+      // arrange
+      when(mockFirestore.collection('daily_challenges')).thenReturn(mockCollection);
+      when(mockCollection.doc(any)).thenReturn(mockDocRef);
+      when(mockDocRef.update(any)).thenAnswer((_) async => null);
+      when(mockFirestore.collection('users')).thenReturn(mockCollection);
+      when(mockCollection.doc(any)).thenReturn(mockDocRef);
+      when(mockDocRef.update(any)).thenAnswer((_) async => null);
+
+      // act
+      await service.completeChallenge('user1', 'challenge1', -100);
+
+      // assert
+      verify(mockDocRef.update(any)).called(2);
+    });
+
+    test('should handle empty userId', () async {
+      // arrange
+      when(mockFirestore.collection('daily_challenges')).thenReturn(mockCollection);
+      when(mockCollection.doc(any)).thenReturn(mockDocRef);
+      when(mockDocRef.update(any)).thenAnswer((_) async => null);
+      when(mockFirestore.collection('users')).thenReturn(mockCollection);
+      when(mockCollection.doc(any)).thenReturn(mockDocRef);
+      when(mockDocRef.update(any)).thenAnswer((_) async => null);
+
+      // act
+      await service.completeChallenge('', 'challenge1', 100);
+
+      // assert
+      verify(mockDocRef.update(any)).called(2);
+    });
+  });
+
+  group('generateNextChallenge', () {
+    test('should add new challenge to Firestore', () async {
+      // arrange
+      when(mockFirestore.collection('daily_challenges')).thenReturn(mockCollection);
+      when(mockCollection.add(any)).thenAnswer((_) async => mockDocRef);
+
+      // act
+      await service.generateNextChallenge('user1');
+
+      // assert
+      verify(mockCollection.add(any)).called(1);
+    });
+
+    test('should handle empty userId', () async {
+      // arrange
+      when(mockFirestore.collection('daily_challenges')).thenReturn(mockCollection);
+      when(mockCollection.add(any)).thenAnswer((_) async => mockDocRef);
+
+      // act
+      await service.generateNextChallenge('');
+
+      // assert
+      verify(mockCollection.add(any)).called(1);
+    });
+
+    test('should handle Firestore errors', () async {
+      // arrange
+      when(mockFirestore.collection('daily_challenges')).thenReturn(mockCollection);
+      when(mockCollection.add(any)).thenThrow(Exception('Firestore error'));
+
+      // act & assert
+      expect(() => service.generateNextChallenge('user1'), throwsException);
+    });
+  });
+}
