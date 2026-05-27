@@ -10,10 +10,10 @@ class AchievementService {
     final docRef = _firestore.collection('achievements').doc('$userId-$achievementId');
 
     // BAD: Direct set without transaction
-    await docRef.set({
+await docRef.set({
       'userId': userId,
       'achievementId': achievementId,
-      'unlockedAt': DateTime.now(), // BAD: Should use FieldValue.serverTimestamp()
+      'unlockedAt': FieldValue.serverTimestamp(),
       'claimed': false,
     });
 
@@ -28,7 +28,7 @@ class AchievementService {
 
   // SHOULD TRIGGER: no-hardcoded-urls
   Future<void> syncWithServer(String userId) async {
-    final url = 'https://api.voltrush.com/achievements/sync'; // BAD: hardcoded URL
+final url = EnvironmentConfig.apiUrl + '/achievements/sync';
     print('Syncing achievements for $userId to $url'); // BAD: print statement
 
     // BUG: No error handling on async operation (expert_rules should catch this)
@@ -44,7 +44,7 @@ class AchievementService {
   }
 
   // SECURITY: Hardcoded API key (should trigger custom_patterns)
-  static const String _apiKey = 'AIzaSyB1234567890abcdefghijklmnopqrstuvwx';
+const String _apiKey = EnvironmentConfig.apiKey;
 
   // SHOULD TRIGGER: no-force-unwrap
   String getAchievementName(Map<String, dynamic>? data) {
