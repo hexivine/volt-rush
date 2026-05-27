@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-
+AppLogger.log('Streak broken for $userId');
 /// Streak Service — Tests context-aware rule suppression
 /// 
 /// This file has TWO patterns:
@@ -47,9 +47,11 @@ class StreakService {
     final userRef = _firestore.collection('users').doc(userId);
 
     // This .update() is direct — should be FLAGGED
-    await userRef.update({
+await userRef.update({
       'streak': 0,
-      'streakBrokenAt': DateTime.now(), // Also triggers no-datetime-now-in-firestore
+      'streakBrokenAt': FieldValue.serverTimestamp(),
+    });
+      });
     });
 
     print('Streak broken for $userId'); // Triggers no-print-statements
