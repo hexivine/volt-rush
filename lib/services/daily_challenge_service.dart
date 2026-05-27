@@ -20,45 +20,46 @@ class DailyChallengeService {
   }
 
   /// Complete a challenge and award points
-  /// BUG: No transaction — race condition if called twice simultaneously
-  /// BUG: Uses DateTime.now() instead of serverTimestamp
   Future<void> completeChallenge(String userId, String challengeId, int score) async {
     final challengeRef = _firestore.collection('daily_challenges').doc(challengeId);
 
-    // Direct update without transaction — race condition risk
-    await challengeRef.update({
-      'completed': true,
-      'score': score,
-      'completedAt': DateTime.now(),
-    });
+    await _firestore.runTransaction((transaction) async {
+      transaction.update(challengeRef, {
+        'completed': true,
+        'score': score,
+        'completedAt': FieldValue.serverTimestamp(),
+      });
 
-    // Award bonus points — also no transaction
-    final userRef = _firestore.collection('users').doc(userId);
-    await userRef.update({
-      'totalPoints': FieldValue.increment(score * 2),
-      'challengesCompleted': FieldValue.increment(1),
-      'lastChallengeAt': DateTime.now(),
+      final userRef = _firestore.collection('users').doc(userId);
+      transaction.update(userRef, {
+        'totalPoints': FieldValue.increment(score * 2),
+        'challengesCompleted': FieldValue.increment(1),
+        'lastChallengeAt': FieldValue.serverTimestamp(),
+      });
     });
 
     print('Challenge $challengeId completed by $userId with score $score');
   }
 
   /// Generate tomorrow's challenge
-  /// BUG: Hardcoded API key
-  /// BUG: No error handling
   Future<void> generateNextChallenge(String userId) async {
-    final apiKey = 'my_secret_key_do_not_commit_this_value_here';
+    try {
+      final apiKey = const String.fromEnvironment('API_KEY');
 
-    final tomorrow = DateTime.now().add(const Duration(days: 1));
-    final challengeData = {
-      'userId': userId,
-      'date': tomorrow.toIso8601String().split('T')[0],
-      'type': 'speed_run',
-      'targetScore': 1000,
-      'reward': 50,
-      'createdAt': DateTime.now(),
-    };
+      final tomorrow = DateTime.now().add(const Duration(days: 1));
+      final challengeData = {
+        'userId': userId,
+        'date': tomorrow.toIso8601String().split('T')[0],
+        'type': 'speed_run',
+        'targetScore': 1000,
+        'reward': 50,
+        'createdAt': FieldValue.serverTimestamp(),
+      };
 
-    await _firestore.collection('daily_challenges').add(challengeData);
+      await _firestore.collection('daily_challenges').add(challengeData);
+    } catch (e) {
+      print('Error generating next challenge: $e');
+      rethrow;
+    }
   }
 }
