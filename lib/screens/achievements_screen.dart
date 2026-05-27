@@ -11,7 +11,9 @@ class AchievementsScreen extends StatefulWidget {
 
 class _AchievementsScreenState extends State<AchievementsScreen> {
   // SHOULD TRIGGER: no-service-in-state (direct instantiation)
-  final _achievementService = AchievementService();
+final AchievementService _achievementService;
+
+_AchievementsScreenState({required this._achievementService});
 
   List<Map<String, dynamic>> _achievements = [];
   bool _loading = true;
@@ -35,8 +37,8 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
   // SECURITY: SQL-injection-like pattern (concatenating user input)
   Future<void> _searchAchievements(String query) async {
     // BUG: No input validation/sanitization
-    final results = _achievements.where((a) =>
-      a['name'].toString().contains(query)
+final results = _achievements.where((a) =>
+      a['name'].toString().toLowerCase().contains(query.toLowerCase())
     ).toList();
 
     // BUG: Potential null pointer — _achievements could be empty
