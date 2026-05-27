@@ -59,8 +59,7 @@ auto_description:
   postToGithub: false
 
 # Auto test (disabled for now)
-auto_test:
-  enabled: false
+auto_test:\n  enabled: true
 
 # Auto fix (disabled for now)
 auto_fix:
