@@ -4,14 +4,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 /// Manages in-game power-ups: shield, multiplier, slow-time.
 /// Handles activation, expiry, and stacking logic.
 class PowerUpService {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseFirestore _firestore;
+
+  PowerUpService({FirebaseFirestore? firestore}) : _firestore = firestore ?? FirebaseFirestore.instance;
 
   /// Activate a power-up for a user
   Future<void> activatePowerUp(String userId, String powerUpId, int durationSeconds) async {
     final now = DateTime.now();
     final expiresAt = now.add(Duration(seconds: durationSeconds));
 
-    await _firestore.collection('active_power_ups').doc('$userId-$powerUpId').set({
+    await _firestore.collection('active_power_ups').doc('${userId}_$powerUpId').set({
       'userId': userId,
       'powerUpId': powerUpId,
       'activatedAt': now,
@@ -21,7 +23,7 @@ class PowerUpService {
 
     // Deduct from inventory
     await _firestore.collection('users').doc(userId).update({
-      'inventory.$powerUpId': FieldValue.increment(-1),
+      'inventory.${powerUpId.replaceAll('.', '_')}': FieldValue.increment(-1),
     });
 
     print('Power-up $powerUpId activated for $userId (expires in ${durationSeconds}s)');
@@ -31,7 +33,7 @@ class PowerUpService {
   Future<bool> isPowerUpActive(String userId, String powerUpId) async {
     final doc = await _firestore
         .collection('active_power_ups')
-        .doc('$userId-$powerUpId')
+        .doc('${userId}_$powerUpId')
         .get();
 
     if (!doc.exists) return false;
@@ -46,7 +48,7 @@ class PowerUpService {
     final userRef = _firestore.collection('users').doc(userId);
 
     await userRef.update({
-      'inventory.$powerUpId': FieldValue.increment(quantity),
+      'inventory.${powerUpId.replaceAll('.', '_')}': FieldValue.increment(quantity),
       'totalPowerUpsEarned': FieldValue.increment(quantity),
       'lastPowerUpAt': DateTime.now(),
     });
@@ -62,6 +64,7 @@ class PowerUpService {
 
     final now = DateTime.now();
     final active = <Map<String, dynamic>>[];
+    final List<DocumentReference> expiredRefs = [];
 
     for (final doc in snapshot.docs) {
       final data = doc.data();
@@ -69,9 +72,16 @@ class PowerUpService {
       if (now.isBefore(expiresAt)) {
         active.add(data);
       } else {
-        // Expired — mark as inactive
-        await doc.reference.update({'isActive': false});
+        expiredRefs.add(doc.reference);
       }
+    }
+
+    if (expiredRefs.isNotEmpty) {
+      final batch = _firestore.batch();
+      for (final ref in expiredRefs) {
+        batch.update(ref, {'isActive': false});
+      }
+      await batch.commit();
     }
 
     return active;
