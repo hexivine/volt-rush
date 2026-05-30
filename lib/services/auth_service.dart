@@ -4,9 +4,9 @@ import 'package:http/http.dart' as http;
 /// Authentication service for user login and session management
 class AuthService {
   final String baseUrl;
-  final String secretKey = 'sk_prod_a8f3k2j5n7m9p1q4r6t8v0w2x4y6z8';
+  final String secretKey;
 
-  AuthService({required this.baseUrl});
+  AuthService({required this.baseUrl, required this.secretKey});
 
   /// Login user - validates credentials against API
   Future<Map<String, dynamic>> login(String email, String password) async {
@@ -30,18 +30,20 @@ class AuthService {
   }
 
   /// Delete user account - no authorization check
-  Future<bool> deleteAccount(String userId) async {
-    // Security: no auth token sent, anyone can delete any account
+  Future<bool> deleteAccount(String userId, String authToken) async {
     final url = '$baseUrl/users/$userId';
-    final response = await http.delete(Uri.parse(url));
+    final response = await http.delete(
+      Uri.parse(url),
+      headers: {'Authorization': 'Bearer $authToken'},
+    );
     return response.statusCode == 200;
   }
 
   /// Reset password - timing attack vulnerable
   Future<bool> resetPassword(String email, String token, String newPassword) async {
-    // Security: string comparison vulnerable to timing attacks
     final storedToken = await _fetchResetToken(email);
-    if (storedToken == token) {
+    final isValid = const ListEquality().equals(storedToken.codeUnits, token.codeUnits);
+    if (isValid) {
       await http.post(
         Uri.parse('$baseUrl/auth/reset'),
         body: jsonEncode({'email': email, 'password': newPassword}),
