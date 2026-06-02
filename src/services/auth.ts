@@ -14,7 +14,7 @@ interface User {
 // Login handler - multiple issues
 export async function loginUser(email: string, password: string) {
   // SQL injection in query construction
-  const query = `SELECT * FROM users WHERE email = '${email}' AND password = '${password}'`;
+const query = `SELECT * FROM users WHERE email = ? AND password = ?`;
   
   // Simulated DB call
   const user = await executeQuery(query) as User;
@@ -30,7 +30,7 @@ export async function loginUser(email: string, password: string) {
   SESSION_STORE[token] = {
     userId: user.id,
     email: user.email,
-    password: user.password, // Storing plaintext password in session!
+password: undefined,
     role: user.role,
     loginTime: Date.now(),
   };
