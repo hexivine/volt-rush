@@ -26,19 +26,19 @@ class DailyChallengeService {
     final challengeRef = _firestore.collection('daily_challenges').doc(challengeId);
 
     // Direct update without transaction — race condition risk
-    await challengeRef.update({
-      'completed': true,
-      'score': score,
-      'completedAt': DateTime.now(),
-    });
+    await challengeRef.update({'completed': true, 'score': score});
+    // Move user points update to a separate method, e.g., updateUserPoints
+            'score': score,
+            'completedAt': FieldValue.serverTimestamp(),
+          });
 
-    // Award bonus points — also no transaction
-    final userRef = _firestore.collection('users').doc(userId);
-    await userRef.update({
-      'totalPoints': FieldValue.increment(score * 2),
-      'challengesCompleted': FieldValue.increment(1),
-      'lastChallengeAt': DateTime.now(),
-    });
+          final userRef = _firestore.collection('users').doc(userId);
+          transaction.update(userRef, {
+            'totalPoints': FieldValue.increment(score * 2),
+            'challengesCompleted': FieldValue.increment(1),
+            'lastChallengeAt': FieldValue.serverTimestamp(),
+          });
+        });
 
     print('Challenge $challengeId completed by $userId with score $score');
   }
@@ -47,14 +47,14 @@ class DailyChallengeService {
   /// BUG: Hardcoded API key
   /// BUG: No error handling
   Future<void> generateNextChallenge(String userId) async {
-    final apiKey = 'my_secret_key_do_not_commit_this_value_here';
+    final apiKey = Platform.environment['API_KEY'] ?? '';
 
     final tomorrow = DateTime.now().add(const Duration(days: 1));
     final challengeData = {
-      'userId': userId,
-      'date': tomorrow.toIso8601String().split('T')[0],
-      'type': 'speed_run',
-      'targetScore': 1000,
+          'type': ChallengeType.speedRun,
+          'targetScore': ChallengeConfig.targetScore,
+          'reward': ChallengeConfig.reward,
+        };
       'reward': 50,
       'createdAt': DateTime.now(),
     };
