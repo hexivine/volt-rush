@@ -27,7 +27,7 @@ class AchievementsScreen extends StatelessWidget {
       );
     }
 
-    final service = AchievementService();
+Consider using a separate provider or repository for data fetching to improve separation of concerns.
 
     return Scaffold(
       appBar: AppBar(
