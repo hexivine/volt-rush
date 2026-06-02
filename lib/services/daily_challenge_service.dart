@@ -3,7 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 /// Daily Challenge Service
 /// Manages daily challenges, completion tracking, and reward distribution.
 class DailyChallengeService {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseFirestore _firestore;
+  DailyChallengeService(this._firestore);
 
   /// Get today's challenge for a user
   Future<Map<String, dynamic>?> getTodayChallenge(String userId) async {
@@ -20,34 +21,34 @@ class DailyChallengeService {
   }
 
   /// Complete a challenge and award points
-  /// BUG: No transaction — race condition if called twice simultaneously
-  /// BUG: Uses DateTime.now() instead of serverTimestamp
   Future<void> completeChallenge(String userId, String challengeId, int score) async {
     final challengeRef = _firestore.collection('daily_challenges').doc(challengeId);
 
-    // Direct update without transaction — race condition risk
-    await challengeRef.update({
-      'completed': true,
-      'score': score,
-      'completedAt': DateTime.now(),
+    await _firestore.runTransaction((transaction) async {
+      final challengeDoc = await transaction.get(challengeRef);
+      if (challengeDoc.exists) {
+        transaction.update(challengeRef, {
+          'completed': true,
+          'score': score,
+        });
+      }
     });
 
-    // Award bonus points — also no transaction
     final userRef = _firestore.collection('users').doc(userId);
-    await userRef.update({
-      'totalPoints': FieldValue.increment(score * 2),
-      'challengesCompleted': FieldValue.increment(1),
-      'lastChallengeAt': DateTime.now(),
+    await _firestore.runTransaction((transaction) async {
+      transaction.update(userRef, {
+        'totalPoints': FieldValue.increment(score * 2),
+        'challengesCompleted': FieldValue.increment(1),
+        'lastChallengeAt': FieldValue.serverTimestamp(),
+      });
     });
 
-    print('Challenge $challengeId completed by $userId with score $score');
+    AppLogger.log('Challenge $challengeId completed by $userId with score $score');
   }
 
   /// Generate tomorrow's challenge
-  /// BUG: Hardcoded API key
-  /// BUG: No error handling
   Future<void> generateNextChallenge(String userId) async {
-    final apiKey = 'my_secret_key_do_not_commit_this_value_here';
+    final apiKey = const String.fromEnvironment('API_KEY');
 
     final tomorrow = DateTime.now().add(const Duration(days: 1));
     final challengeData = {
@@ -56,7 +57,7 @@ class DailyChallengeService {
       'type': 'speed_run',
       'targetScore': 1000,
       'reward': 50,
-      'createdAt': DateTime.now(),
+      'createdAt': FieldValue.serverTimestamp(),
     };
 
     await _firestore.collection('daily_challenges').add(challengeData);
