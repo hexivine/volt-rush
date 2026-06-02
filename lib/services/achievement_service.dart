@@ -10,10 +10,10 @@ class AchievementService {
     final docRef = _firestore.collection('achievements').doc('$userId-$achievementId');
 
     // BAD: Direct set without transaction
-    await docRef.set({
+await docRef.set({
       'userId': userId,
       'achievementId': achievementId,
-      'unlockedAt': DateTime.now(), // BAD: Should use FieldValue.serverTimestamp()
+      'unlockedAt': FieldValue.serverTimestamp(),
       'claimed': false,
     });
 
@@ -44,7 +44,7 @@ class AchievementService {
   }
 
   // SECURITY: Hardcoded API key (should trigger custom_patterns)
-  static const String _apiKey = 'AIzaSyB1234567890abcdefghijklmnopqrstuvwx';
+final String _apiKey;
 
   // SHOULD TRIGGER: no-force-unwrap
   String getAchievementName(Map<String, dynamic>? data) {
