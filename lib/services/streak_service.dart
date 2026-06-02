@@ -47,11 +47,15 @@ class StreakService {
     final userRef = _firestore.collection('users').doc(userId);
 
     // This .update() is direct — should be FLAGGED
-    await userRef.update({
+await userRef.update({
       'streak': 0,
-      'streakBrokenAt': DateTime.now(), // Also triggers no-datetime-now-in-firestore
+      'streakBrokenAt': FieldValue.serverTimestamp(),
+    });
+      });
+    });
+      });
     });
 
-    print('Streak broken for $userId'); // Triggers no-print-statements
+AppLogger.log('Streak broken for $userId');
   }
 }
