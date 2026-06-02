@@ -2,7 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// Achievement Service — DELIBERATELY has violations for testing CodePeel rules
 class AchievementService {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+final FirebaseFirestore _firestore;
+
+AchievementService({FirebaseFirestore? firestore})
+  : _firestore = firestore ?? FirebaseFirestore.instance;
 
   // SHOULD TRIGGER: firestore-use-transactions (direct .set without transaction)
   // SHOULD TRIGGER: no-datetime-now-in-firestore (DateTime.now())
@@ -10,10 +13,10 @@ class AchievementService {
     final docRef = _firestore.collection('achievements').doc('$userId-$achievementId');
 
     // BAD: Direct set without transaction
-    await docRef.set({
+await docRef.set({
       'userId': userId,
       'achievementId': achievementId,
-      'unlockedAt': DateTime.now(), // BAD: Should use FieldValue.serverTimestamp()
+      'unlockedAt': FieldValue.serverTimestamp(),
       'claimed': false,
     });
 
@@ -32,10 +35,11 @@ class AchievementService {
     print('Syncing achievements for $userId to $url'); // BAD: print statement
 
     // BUG: No error handling on async operation (expert_rules should catch this)
-    final snapshot = await _firestore
+final snapshot = await _firestore
         .collection('achievements')
         .where('userId', isEqualTo: userId)
-        .get(); // BUG: No limit() — unbounded read (expert_rules should catch)
+        .limit(100)
+        .get();
 
     for (final doc in snapshot.docs) {
       // BAD: Direct delete without transaction
@@ -44,7 +48,7 @@ class AchievementService {
   }
 
   // SECURITY: Hardcoded API key (should trigger custom_patterns)
-  static const String _apiKey = 'AIzaSyB1234567890abcdefghijklmnopqrstuvwx';
+const String _apiKey = EnvironmentConfig.apiKey;
 
   // SHOULD TRIGGER: no-force-unwrap
   String getAchievementName(Map<String, dynamic>? data) {
