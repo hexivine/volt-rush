@@ -1,67 +1,98 @@
-# CodePeel Configuration for volt-rush
-# Testing all config options
+# Comprehensive CodePeel Configuration Test
+# Tests ALL supported config options
 
-# Files to exclude from review
 ignore_paths:
-  - "scripts/**"
-  - "*.generated.dart"
   - "build/**"
+  - "*.generated.dart"
+  - "test/fixtures/**"
 
-# Custom instructions for the AI reviewer
 custom_instructions: |
-  This is a Flutter mobile game app called Volt Rush.
-  We use Provider for state management.
-  All Firestore operations should use transactions for writes.
-  Prefer const constructors for widgets.
+  This is a Flutter mobile game app called Volt Rush using Provider for state management.
+  All Firestore writes MUST use transactions (see leaderboard_service.dart for the pattern).
+  Services should be injected via Provider, never instantiated directly in State classes.
+  Use FieldValue.serverTimestamp() for all timestamp fields, never DateTime.now().
+  All API calls must have proper error handling with try/catch.
 
-# Expert rules — enforced on every review
 expert_rules:
-  - "Never use print() in production code — use AppLogger instead"
-  - "All public methods must have documentation comments"
-  - "Firestore writes must use batch or transaction, never raw set/update"
+  - "All async functions must have try/catch error handling"
+  - "Never use print() in production code — use a logging service"
+  - "State classes must dispose all controllers and subscriptions"
+  - "All Firestore queries must have a limit() to prevent unbounded reads"
 
-# Review behavior
+rules:
+  - id: firestore-use-transactions
+    pattern: "\\.(set|update|delete|add)\\("
+    message: "Firestore writes must use batch or transaction for atomicity."
+    severity: high
+    paths: ["lib/services/**"]
+
+  - id: no-datetime-now-in-firestore
+    pattern: "DateTime\\.now\\(\\)"
+    message: "Use FieldValue.serverTimestamp() for Firestore timestamps."
+    severity: medium
+    paths: ["lib/services/**"]
+
+  - id: no-service-in-state
+    pattern: "Service\\(\\)"
+    message: "Don't instantiate services directly. Use Provider for dependency injection."
+    severity: high
+    paths: ["lib/screens/**"]
+
+  - id: no-print-statements
+    pattern: "\\bprint\\("
+    message: "Remove print() statements — use a proper logging service."
+    severity: medium
+    paths: ["lib/**"]
+    exclude_paths: ["lib/main.dart"]
+
+  - id: no-hardcoded-urls
+    pattern: "http(s)?://[^'\"\\s]+"
+    message: "Don't hardcode URLs — use environment config or constants file."
+    severity: medium
+    paths: ["lib/**"]
+    exclude_paths: ["lib/firebase_options.dart"]
+    category: security
+
+  - id: no-force-unwrap
+    pattern: "\\!"
+    message: "Avoid force unwrap (!) — use null-safe operators or proper null checks."
+    severity: low
+    paths: ["lib/**"]
+    category: dart
+
 strictMode: false
 securityOnly: false
 ignoreFormatting: true
 
-# Walkthrough settings
 walkthrough:
   enabled: true
   auto_sequence_diagram: true
   include_affected_files: true
   risk_assessment: true
+  max_length: 5000
 
-# Auto-review settings
 auto_review:
   enabled: true
   auto_incremental_review: true
-  base_branches:
-    - master
-    - main
-  ignore_title_keywords:
-    - WIP
-    - "DO NOT REVIEW"
+  base_branches: ["master"]
+  ignore_title_keywords: ["WIP", "DO NOT REVIEW", "[skip-review]"]
   profile: assertive
+  tone_instructions: "Be direct and specific. Focus on bugs and security over style."
 
-# Chat
 chat:
   auto_reply: true
 
-# Security
 security:
   custom_patterns:
-    - "VOLT_RUSH_SECRET_[A-Za-z0-9]{16}"
+    - "AIza[A-Za-z0-9_\\-]{35}"
+    - "sk_live_[A-Za-z0-9]{24,}"
 
-# Auto description
 auto_description:
   enabled: true
   postToGithub: false
 
-# Auto test (disabled for now)
 auto_test:
-  enabled: false
+  enabled: true
 
-# Auto fix (disabled for now)
 auto_fix:
   enabled: true
