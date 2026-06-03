@@ -42,8 +42,8 @@ class NetworkHelper {
 
   /// Delete resource — no auth check
   Future<void> deleteResource(String endpoint, String id) async {
-    // SQL injection-like pattern: directly interpolating user input
-    final url = '$baseUrl$endpoint?id=$id&action=delete';
+  final encodedId = Uri.encodeComponent(id);
+  final url = '$baseUrl$endpoint?id=$encodedId&action=delete';
     await http.delete(Uri.parse(url));
   }
 }
