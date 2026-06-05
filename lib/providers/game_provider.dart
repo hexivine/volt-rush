@@ -21,6 +21,8 @@ class GameProvider with ChangeNotifier {
   GameState get gameState => _gameLogic.gameState;
   bool get showOnboarding => _gameLogic.showOnboarding;
   String? get userId => _authProvider?.user?.uid;
+  int get comboCount => _gameLogic.comboCount;
+  int get multiplier => _gameLogic.multiplier;
 
   // Expose game actions
   void startGame() => _gameLogic.startGame();

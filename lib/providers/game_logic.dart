@@ -8,12 +8,16 @@ class GameLogic {
   Timer? _timer;
   GameState _gameState = GameState.home;
   bool _showOnboarding = true;
+  int _comboCount = 0;
+  int _multiplier = 1;
 
   int get currentScore => _currentScore;
   int get highScore => _highScore;
   double get timeRemaining => _timeRemaining;
   GameState get gameState => _gameState;
   bool get showOnboarding => _showOnboarding;
+  int get comboCount => _comboCount;
+  int get multiplier => _multiplier;
 
   final Function() onStateChanged;
 
@@ -70,7 +74,10 @@ class GameLogic {
   }
 
   void incrementScore() {
-    _currentScore++;
+    _comboCount++;
+    _multiplier = (_comboCount >= 10) ? 3 : (_comboCount >= 5) ? 2 : 1;
+    _currentScore += _multiplier;
+    _timeRemaining = (_timeRemaining + 0.3).clamp(0.0, 15.0);
     onStateChanged();
   }
 
@@ -79,6 +86,8 @@ class GameLogic {
       _highScore = _currentScore;
       _saveHighScore();
     }
+    _comboCount = 0;
+    _multiplier = 1;
     _gameState = GameState.banked;
     _timer?.cancel();
     onStateChanged();
