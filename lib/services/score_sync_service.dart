@@ -1,4 +1,4 @@
-// E2E test trigger — re-review after credentials fix
+// E2E test trigger — re-review after secrets binding fix
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// Syncs scores between local cache and Firestore.
