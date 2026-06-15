@@ -84,6 +84,27 @@ class GameLogic {
     onStateChanged();
   }
 
+  void pauseGame() {
+    _timer?.cancel();
+    _gameState = GameState.paused;
+    onStateChanged();
+  }
+
+  void resumeGame() {
+    if (_gameState != GameState.paused) return;
+    _gameState = GameState.playing;
+    _timer?.cancel();
+    _timer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
+      _timeRemaining -= 0.1;
+      if (_timeRemaining <= 0) {
+        _timer?.cancel();
+        _gameState = GameState.bust;
+      }
+      onStateChanged();
+    });
+    onStateChanged();
+  }
+
   void dispose() {
     _timer?.cancel();
   }
@@ -92,6 +113,9 @@ class GameLogic {
 enum GameState {
   home,
   playing,
+  paused,
   banked,
   bust,
 }
+
+
