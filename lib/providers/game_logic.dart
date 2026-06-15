@@ -84,6 +84,14 @@ class GameLogic {
     onStateChanged();
   }
 
+  void resetGame() {
+    _timer?.cancel();
+    _currentScore = 0;
+    _timeRemaining = 10.0;
+    _gameState = GameState.reset;
+    onStateChanged();
+  }
+
   void dispose() {
     _timer?.cancel();
   }
@@ -92,6 +100,8 @@ class GameLogic {
 enum GameState {
   home,
   playing,
+  paused,
   banked,
   bust,
+  reset,
 }
