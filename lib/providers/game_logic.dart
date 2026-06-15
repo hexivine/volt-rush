@@ -87,7 +87,6 @@ class GameLogic {
   void pauseGame() {
     _timer?.cancel();
     _gameState = GameState.paused;
-    onStateChanged();
   }
 
   void resumeGame() {
@@ -117,5 +116,3 @@ enum GameState {
   banked,
   bust,
 }
-
-
