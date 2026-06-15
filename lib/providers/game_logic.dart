@@ -88,7 +88,7 @@ class GameLogic {
     _timer?.cancel();
     _currentScore = 0;
     _timeRemaining = 10.0;
-    _gameState = GameState.reset;
+    _gameState = GameState.home;
     onStateChanged();
   }
 
