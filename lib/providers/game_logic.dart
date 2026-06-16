@@ -95,3 +95,6 @@ enum GameState {
   banked,
   bust,
 }
+
+  // Test method for staging JWT fix verification
+  bool isGameOver() => _currentScore > 100;
