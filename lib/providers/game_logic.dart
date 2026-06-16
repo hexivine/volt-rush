@@ -84,6 +84,8 @@ class GameLogic {
     onStateChanged();
   }
 
+  bool get isGameOver => _gameState == GameState.bust || _gameState == GameState.banked;
+
   void dispose() {
     _timer?.cancel();
   }
