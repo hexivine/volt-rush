@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:volt_rush/providers/game_provider.dart';
+import 'package:volt_rush/theme.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -9,6 +10,7 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final game = Provider.of<GameProvider>(context, listen: false);
+    final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
 
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -46,6 +48,22 @@ class SettingsScreen extends StatelessWidget {
                 );
               },
               child: const Text('Reset'),
+            ),
+            const SizedBox(height: 40),
+            Text(
+              'Theme',
+              style: GoogleFonts.oswald(
+                fontSize: 30,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 20),
+            Switch(
+              value: themeProvider.themeMode == ThemeMode.dark,
+              onChanged: (_) => themeProvider.toggleTheme(),
+              activeColor: themeProvider.themeMode == ThemeMode.dark
+                  ? Colors.amber
+                  : Colors.deepPurple,
             ),
           ],
         ),
