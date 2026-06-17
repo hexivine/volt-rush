@@ -1,0 +1,7 @@
+{
+  "tool_name": "Bash",
+  "tool_input_preview": "{\"command\":\"cd E:/antig/codepeel/Startup-Agents/codepeel/volt-rush && git push && gh pr create --title \\\"fix: expose comboCount and multiplier in GameProvider\\\" --body \\\"$(cat <<'EOF'\\n## Summary\\n- E...",
+  "error": "Exit code 127\nTo https://github.com/hexivine/volt-rush.git\n   91f687e..ff5e013  test-webhook-fix -> test-webhook-fix\n/usr/bin/bash: line 10: gh: command not found",
+  "timestamp": "2026-04-05T18:16:07.333Z",
+  "retry_count": 1
+}

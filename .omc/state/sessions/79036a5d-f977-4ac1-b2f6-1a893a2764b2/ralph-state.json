@@ -1,0 +1,12 @@
+{
+  "active": true,
+  "iteration": 1,
+  "max_iterations": 100,
+  "started_at": "2026-04-04T17:03:23.545Z",
+  "prompt": "/ralph execute the plan",
+  "session_id": "79036a5d-f977-4ac1-b2f6-1a893a2764b2",
+  "project_path": "E:\\antig\\codepeel\\Startup-Agents\\codepeel\\volt-rush",
+  "linked_ultrawork": true,
+  "awaiting_confirmation": true,
+  "last_checked_at": "2026-04-04T17:03:23.546Z"
+}
