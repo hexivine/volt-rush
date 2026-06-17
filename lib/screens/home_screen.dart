@@ -51,6 +51,40 @@ class HomeScreen extends StatelessWidget {
               child: const Text('Play'),
             ),
             const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () => showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: const Text('How to Play'),
+                  content: const Text(
+                    'Volt Rush is a fast-paced reaction game!\n\n'
+                    '1. Press Play to start\n'
+                    '2. React quickly to win points\n'
+                    '3. Bank your points before you bust!\n\n'
+                    'The faster you react, the higher your score!',
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text('Got it!'),
+                    ),
+                  ],
+                ),
+              ),
+              child: const Text('How to Play'),
+            ),
+            const SizedBox(height: 20),
+            // CodePeel test: Added settings shortcut button
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const SettingsScreen()),
+                );
+              },
+              child: const Text('Settings'),
+            ),
+            const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -91,3 +125,12 @@ class HomeScreen extends StatelessWidget {
     );
   }
 }
+// Test trigger Sun Apr 12 13:38:46 IST 2026
+// Trigger 13:53:00
+// Final test 14:00:07
+// Retest 14:05:40
+// Credit top-up test 14:08:36
+// Mermaid fix final test 14:14:39
+// Trigger 14:21:11.616638600
+// Mermaid fix test Sun Apr 12 14:57:56 IST 2026
+// Final mermaid test Sun Apr 12 15:26:51 IST 2026

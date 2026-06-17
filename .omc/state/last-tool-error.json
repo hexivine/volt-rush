@@ -1,0 +1,7 @@
+{
+  "tool_name": "Bash",
+  "tool_input_preview": "{\"command\":\"cd functions && npm run deploy 2>&1 | tail -20\",\"timeout\":120000,\"description\":\"Deploy updated githubPRProcessor\"}",
+  "error": "Exit code 1\n/usr/bin/bash: line 1: cd: functions: No such file or directory",
+  "timestamp": "2026-04-12T09:32:10.371Z",
+  "retry_count": 1
+}
