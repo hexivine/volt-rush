@@ -22,7 +22,7 @@ expert_rules:
 
 # Review behavior
 strictMode: false
-securityOnly: false
+securityOnly: true
 ignoreFormatting: true
 
 # Walkthrough settings
