@@ -20,7 +20,7 @@ class ThemeProvider with ChangeNotifier {
 }
 
 class AppTheme {
-  static const Color primarySeedColor = Colors.deepPurple;
+  static const Color primarySeedColor = Colors.deepPurpleAccent;
 
   // Define a common TextTheme
   static final TextTheme appTextTheme = TextTheme(
