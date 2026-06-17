@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class GameLogic {
+  static const Duration _tickInterval = Duration(milliseconds: 100);
   int _currentScore = 0;
   int _highScore = 0;
   double _timeRemaining = 10.0;
@@ -58,7 +59,7 @@ class GameLogic {
     _showOnboarding = false;
     _saveOnboardingState();
     _timer?.cancel();
-    _timer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
+    _timer = Timer.periodic(_tickInterval, (timer) {
       _timeRemaining -= 0.1;
       if (_timeRemaining <= 0) {
         _timer?.cancel();
@@ -88,6 +89,7 @@ class GameLogic {
     if (_gameState == GameState.playing) {
       _gameState = GameState.paused;
       _timer?.cancel();
+      _timer = null;
       onStateChanged();
     }
   }
@@ -95,7 +97,7 @@ class GameLogic {
   void resumeGame() {
     if (_gameState == GameState.paused) {
       _gameState = GameState.playing;
-      _timer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
+      _timer = Timer.periodic(_tickInterval, (timer) {
         _timeRemaining -= 0.1;
         if (_timeRemaining <= 0) {
           _timer?.cancel();
