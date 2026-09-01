@@ -45,6 +45,14 @@ class HomeScreen extends StatelessWidget {
               '${game.highScore}',
               style: Theme.of(context).textTheme.displayLarge,
             ),
+            const SizedBox(height: 8),
+            Text(
+              '🔥 Win Streak: ${game.winStreak}',
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                color: Colors.amber,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             const SizedBox(height: 50),
             ElevatedButton(
               onPressed: () => game.startGame(),
