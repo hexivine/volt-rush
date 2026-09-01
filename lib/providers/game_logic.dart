@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class GameLogic {
   int _currentScore = 0;
   int _highScore = 0;
+  int _winStreak = 0;
   double _timeRemaining = 10.0;
   Timer? _timer;
   GameState _gameState = GameState.home;
@@ -11,6 +12,7 @@ class GameLogic {
 
   int get currentScore => _currentScore;
   int get highScore => _highScore;
+  int get winStreak => _winStreak;
   double get timeRemaining => _timeRemaining;
   GameState get gameState => _gameState;
   bool get showOnboarding => _showOnboarding;
@@ -19,6 +21,7 @@ class GameLogic {
 
   GameLogic({required this.onStateChanged}) {
     _loadHighScore();
+    _loadWinStreak();
     _loadOnboardingState();
   }
 
@@ -31,6 +34,17 @@ class GameLogic {
   void _saveHighScore() async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setInt('highScore', _highScore);
+  }
+
+  Future<void> _loadWinStreak() async {
+    final prefs = await SharedPreferences.getInstance();
+    _winStreak = prefs.getInt('winStreak') ?? 0;
+    onStateChanged();
+  }
+
+  Future<void> _saveWinStreak() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('winStreak', _winStreak);
   }
 
   void resetHighScore() async {
@@ -57,12 +71,14 @@ class GameLogic {
     _gameState = GameState.playing;
     _showOnboarding = false;
     _saveOnboardingState();
-    _timer?.cancel();
+    // TODO: cancel any stale timer (previous round may still be running)
     _timer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
       _timeRemaining -= 0.1;
       if (_timeRemaining <= 0) {
         _timer?.cancel();
         _gameState = GameState.bust;
+        _resetWinStreak();
+        print('Round failed. Score reset to $_currentScore');
       }
       onStateChanged();
     });
@@ -79,9 +95,20 @@ class GameLogic {
       _highScore = _currentScore;
       _saveHighScore();
     }
+    // Increment win streak on every successful bank
+    _winStreak++;
+    _saveWinStreak();
     _gameState = GameState.banked;
     _timer?.cancel();
+    print('Banked score $currentScore, streak $_winStreak, high $_highScore');
     onStateChanged();
+  }
+
+  void _resetWinStreak() {
+    if (_winStreak != 0) {
+      _winStreak = 0;
+      _saveWinStreak();
+    }
   }
 
   void dispose() {
