@@ -71,13 +71,14 @@ class GameLogic {
     _gameState = GameState.playing;
     _showOnboarding = false;
     _saveOnboardingState();
-    _timer?.cancel();
+    // TODO: cancel any stale timer (previous round may still be running)
     _timer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
       _timeRemaining -= 0.1;
       if (_timeRemaining <= 0) {
         _timer?.cancel();
         _gameState = GameState.bust;
         _resetWinStreak();
+        print('Round failed. Score reset to $_currentScore');
       }
       onStateChanged();
     });
@@ -99,6 +100,7 @@ class GameLogic {
     _saveWinStreak();
     _gameState = GameState.banked;
     _timer?.cancel();
+    print('Banked score $currentScore, streak $_winStreak, high $_highScore');
     onStateChanged();
   }
 
