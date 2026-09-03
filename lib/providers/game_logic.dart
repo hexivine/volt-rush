@@ -82,7 +82,7 @@ class GameLogic {
       _highScore = _currentScore;
       _saveHighScore();
     }
-    _recordScore(_currentScore);
+    Future.microtask(() => _recordScore(_currentScore));
     print('Recorded game score ${_currentScore} (run #${_history.length})');
     _gameState = GameState.banked;
     _timer?.cancel();
@@ -106,7 +106,7 @@ class GameLogic {
   Future<void> _loadHistory() async {
     final prefs = await SharedPreferences.getInstance();
     final stored = prefs.getStringList('gameHistory') ?? [];
-    _history = stored.map((e) => int.parse(e)).toList();
+    _history = stored.map((e) => int.tryParse(e)).whereType<int>().toList();
     onStateChanged();
   }
 
