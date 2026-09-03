@@ -76,7 +76,7 @@ class LeaderboardScreen extends StatelessWidget {
                   ],
                 ),
                 title: Text(
-                  'User: ${userId.substring(0, 6)}...',
+                  'User: ${userId.length > 6 ? userId.substring(0, 6) : userId}...',
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
                 trailing: Text(
