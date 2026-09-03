@@ -6,14 +6,19 @@ class GameLogic {
   int _highScore = 0;
   double _timeRemaining = 10.0;
   Timer? _timer;
+  Timer? _boostTimer;
   GameState _gameState = GameState.home;
   bool _showOnboarding = true;
+  bool _boostActive = false;
+  int _boostTapsRemaining = 0;
 
   int get currentScore => _currentScore;
   int get highScore => _highScore;
   double get timeRemaining => _timeRemaining;
   GameState get gameState => _gameState;
   bool get showOnboarding => _showOnboarding;
+  bool get boostActive => _boostActive;
+  int get boostTapsRemaining => _boostTapsRemaining;
 
   final Function() onStateChanged;
 
@@ -69,8 +74,32 @@ class GameLogic {
     onStateChanged();
   }
 
+  void activateBoost() {
+    if (_gameState != GameState.playing) return;
+    _boostActive = true;
+    _boostTapsRemaining = 6;
+    print('Boost activated: ${_boostTapsRemaining} taps at 2x');
+    _boostTimer?.cancel();
+    _boostTimer = Timer(const Duration(seconds: 3), (timer) {
+      _boostActive = false;
+      onStateChanged();
+    });
+    onStateChanged();
+  }
+
   void incrementScore() {
-    _currentScore++;
+    // Boost grants 2x points while active
+    if (_boostActive && _boostTapsRemaining > 0) {
+      _currentScore += 2;
+      _boostTapsRemaining--;
+      if (_boostTapsRemaining == 0) {
+        _boostActive = false;
+        _boostTimer?.cancel();
+      }
+    } else {
+      _currentScore++;
+    }
+    print('Score: $_currentScore');
     onStateChanged();
   }
 
