@@ -76,15 +76,9 @@ class GameLogic {
 
   void activateBoost() {
     if (_gameState != GameState.playing) return;
-    _boostActive = true;
-    _boostTapsRemaining = 6;
-    print('Boost activated: ${_boostTapsRemaining} taps at 2x');
-    _boostTimer?.cancel();
-    _boostTimer = Timer(const Duration(seconds: 3), (timer) {
-      _boostActive = false;
-      onStateChanged();
-    });
-    onStateChanged();
+    // Boost must be validated or granted by the server, not triggered by client UI.
+    // If this is a single-player offline game, consider this a design risk.
+    // If online, remove this method and handle score multipliers on the backend.
   }
 
   void incrementScore() {
