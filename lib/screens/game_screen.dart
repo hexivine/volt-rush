@@ -27,6 +27,16 @@ class GameScreen extends StatelessWidget {
               ),
             ),
             Positioned(
+              top: 20,
+              right: 20,
+              child: Text(
+                game.boostActive
+                    ? '⚡ ${game.boostTapsRemaining} taps left'
+                    : '',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+            ),
+            Positioned(
               bottom: 50,
               left: 20,
               right: 20,
@@ -36,6 +46,10 @@ class GameScreen extends StatelessWidget {
                   ElevatedButton(
                     onPressed: () => game.bankScore(),
                     child: const Text('Bank'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () => game.activateBoost(),
+                    child: const Text('⚡ Boost'),
                   ),
                   Text(
                     'Time: ${game.timeRemaining.toStringAsFixed(1)}',

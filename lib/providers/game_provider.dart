@@ -20,10 +20,13 @@ class GameProvider with ChangeNotifier {
   double get timeRemaining => _gameLogic.timeRemaining;
   GameState get gameState => _gameLogic.gameState;
   bool get showOnboarding => _gameLogic.showOnboarding;
+  bool get boostActive => _gameLogic.boostActive;
+  int get boostTapsRemaining => _gameLogic.boostTapsRemaining;
   String? get userId => _authProvider?.user?.uid;
 
   // Expose game actions
   void startGame() => _gameLogic.startGame();
+  void activateBoost() => _gameLogic.activateBoost();
   void incrementScore() => _gameLogic.incrementScore();
   void bankScore() {
     final uid = _authProvider?.user?.uid;
