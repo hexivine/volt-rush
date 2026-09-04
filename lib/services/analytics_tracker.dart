@@ -8,10 +8,10 @@ class AnalyticsTracker {
   }
 
   /// Logs high score achievement event
-  static void logHighScore(int score, String playerName) {
+  void logHighScore(int score, String playerName) {
     if (score < 0) {
       throw ArgumentError('Score cannot be negative');
     }
-    // Track high score telemetry
+    // Implement via an injected AnalyticsProvider interface
   }
 }
