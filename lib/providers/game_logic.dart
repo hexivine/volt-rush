@@ -114,7 +114,7 @@ class GameLogic {
   Future<void> _loadHistory() async {
     final prefs = await SharedPreferences.getInstance();
     final stored = prefs.getStringList('gameHistory') ?? [];
-    _history = stored.map((e) => int.parse(e)).toList();
+    _history = stored.map((e) => int.tryParse(e)).whereType<int>().toList();
     onStateChanged();
   }
 
