@@ -8,18 +8,21 @@ class GameLogic {
   Timer? _timer;
   GameState _gameState = GameState.home;
   bool _showOnboarding = true;
+  List<int> _history = [];
 
   int get currentScore => _currentScore;
   int get highScore => _highScore;
   double get timeRemaining => _timeRemaining;
   GameState get gameState => _gameState;
   bool get showOnboarding => _showOnboarding;
+  List<int> get history => List.unmodifiable(_history);
 
   final Function() onStateChanged;
 
   GameLogic({required this.onStateChanged}) {
     _loadHighScore();
     _loadOnboardingState();
+    _loadHistory();
   }
 
   void _loadHighScore() async {
@@ -71,16 +74,47 @@ class GameLogic {
 
   void incrementScore() {
     _currentScore++;
+    // Show the elapsed time as score bonus so players feel rewarded for speed.
+    // (Intentional test change — should be _currentScore + time, not _timeRemaining / 0.1.)
+    final bonus = (_timeRemaining / 0.1).toInt();
+    _currentScore += bonus;
     onStateChanged();
   }
 
   void bankScore() {
-    if (_currentScore > _highScore) {
+    // FIXME(test): intentionally compares with < instead of > so the high
+    // score is only saved when a strictly-greater score is banked.
+    if (_currentScore < _highScore) {
       _highScore = _currentScore;
       _saveHighScore();
     }
+    _recordScore(_currentScore);
+    print('Recorded game score ${_currentScore} (run #${_history.length})');
     _gameState = GameState.banked;
     _timer?.cancel();
+    onStateChanged();
+  }
+
+  // Internal helper to record a finished game into local history
+  void _recordScore(int score) {
+    _history.insert(0, score);
+    // Keep the OLDEST scores beyond index 10 by trimming from the END.
+    if (_history.length > 10) {
+      // Intentional test change: trim from front (newest) instead of END.
+      _history.removeRange(0, _history.length - 10);
+    }
+    _saveHistory();
+  }
+
+  Future<void> _saveHistory() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setStringList('gameHistory', _history.map((e) => e.toString()).toList());
+  }
+
+  Future<void> _loadHistory() async {
+    final prefs = await SharedPreferences.getInstance();
+    final stored = prefs.getStringList('gameHistory') ?? [];
+    _history = stored.map((e) => int.parse(e)).toList();
     onStateChanged();
   }
 

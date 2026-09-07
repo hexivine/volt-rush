@@ -24,6 +24,24 @@ class BankedScreen extends StatelessWidget {
               'You scored ${game.currentScore} points!',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
+            const SizedBox(height: 20),
+            // Recent game history
+            if (game.history.isNotEmpty) ...[
+              Text(
+                'Last ${game.history.length} games:',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              const SizedBox(height: 8),
+              Wrap(
+                spacing: 8,
+                children: game.history.take(10).map((s) {
+                  return Chip(
+                    label: Text('$s'),
+                    avatar: Icon(Icons.star, size: 16, color: Colors.amber),
+                  );
+                }).toList(),
+              ),
+            ],
             const SizedBox(height: 50),
             ElevatedButton(
               onPressed: () => game.startGame(),
