@@ -7,6 +7,7 @@ import 'package:volt_rush/firebase_options.dart';
 import 'package:volt_rush/providers/game_provider.dart';
 import 'package:volt_rush/providers/auth_provider.dart';
 import 'package:volt_rush/providers/leaderboard_provider.dart';
+import 'package:volt_rush/providers/challenge_provider.dart';
 import 'package:volt_rush/screens/home_screen.dart';
 import 'package:volt_rush/screens/game_screen.dart';
 import 'package:volt_rush/screens/banked_screen.dart';
@@ -26,12 +27,25 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Kick off the daily challenge fetch as soon as the app mounts.
+    context.read<ChallengeProvider>().loadChallenge();
+
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AuthProvider()),
-        ChangeNotifierProxyProvider<AuthProvider, GameProvider>(
-          create: (_) => GameProvider(),
-          update: (_, auth, game) => GameProvider(authProvider: auth),
+        ChangeNotifierProxyProvider<AuthProvider, ChallengeProvider>(
+          create: (_) => ChallengeProvider(),
+          update: (_, auth, challenge) => ChallengeProvider(authProvider: auth),
+        ),
+        ChangeNotifierProxyProvider2<AuthProvider, ChallengeProvider, GameProvider>(
+          create: (context) => GameProvider(
+            authProvider: context.read<AuthProvider>(),
+            challengeProvider: context.read<ChallengeProvider>(),
+          ),
+          update: (_, auth, challenge, game) => GameProvider(
+            authProvider: auth,
+            challengeProvider: challenge,
+          ),
         ),
         ChangeNotifierProvider(create: (_) => LeaderboardProvider()),
         ChangeNotifierProvider(create: (_) => ThemeProvider()), // Add ThemeProvider

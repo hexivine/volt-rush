@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:volt_rush/providers/game_provider.dart';
+import 'package:volt_rush/providers/challenge_provider.dart';
 import 'package:volt_rush/screens/leaderboard_screen.dart';
 import 'package:volt_rush/screens/settings_screen.dart';
 import 'package:volt_rush/theme.dart'; // Import ThemeProvider
@@ -13,8 +14,15 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final game = Provider.of<GameProvider>(context);
     final themeProvider = Provider.of<ThemeProvider>(context); // Access ThemeProvider
+    final challengeProvider = Provider.of<ChallengeProvider>(context);
     final String shareText =
         'I just got a new high score of ${game.highScore} in Volt Rush! Can you beat it?';
+
+    if (challengeProvider.isLoading && challengeProvider.challenge == null) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -45,6 +53,29 @@ class HomeScreen extends StatelessWidget {
               '${game.highScore}',
               style: Theme.of(context).textTheme.displayLarge,
             ),
+            if (challengeProvider.challenge != null) ...[
+              const SizedBox(height: 16),
+              Text(
+                'Daily: ${challengeProvider.challenge!.title} '
+                '(hit ${challengeProvider.challenge!.targetScore} for x${challengeProvider.challenge!.bonusMultiplier})',
+                style: Theme.of(context).textTheme.bodyMedium,
+                textAlign: TextAlign.center,
+              ),
+            ],
+            if (challengeProvider.bonusPoints > 0) ...[
+              const SizedBox(height: 8),
+              Text(
+                'Bonus available: ${challengeProvider.bonusPoints}',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+            ],
+            if (challengeProvider.error != null) ...[
+              const SizedBox(height: 8),
+              Text(
+                'Could not load daily challenge',
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+            ],
             const SizedBox(height: 50),
             ElevatedButton(
               onPressed: () => game.startGame(),

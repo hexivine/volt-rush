@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:volt_rush/providers/auth_provider.dart';
+import 'package:volt_rush/providers/challenge_provider.dart';
 import 'package:volt_rush/providers/game_logic.dart';
 import 'package:volt_rush/services/leaderboard_service.dart';
 import 'package:volt_rush/screens/settings_screen.dart';
@@ -9,8 +10,13 @@ class GameProvider with ChangeNotifier {
   late GameLogic _gameLogic;
   final AuthProvider? _authProvider;
   final LeaderboardService _leaderboardService = LeaderboardService();
+  final ChallengeProvider? _challengeProvider;
 
-  GameProvider({AuthProvider? authProvider}) : _authProvider = authProvider {
+  GameProvider({
+    AuthProvider? authProvider,
+    ChallengeProvider? challengeProvider,
+  })  : _authProvider = authProvider,
+        _challengeProvider = challengeProvider {
     _gameLogic = GameLogic(onStateChanged: () => notifyListeners());
   }
 
@@ -36,6 +42,8 @@ class GameProvider with ChangeNotifier {
     if (uid != null) {
       // Fire-and-forget leaderboard write
       _leaderboardService.addScore(uid, _gameLogic.currentScore);
+      // Fire-and-forget challenge write
+      _challengeProvider?.submitScore(_gameLogic.currentScore);
     }
     _gameLogic.bankScore();
     _isBanking = false;
