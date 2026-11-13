@@ -1,3 +1,4 @@
+score = (score * multiplier).clamp(-2147483648, 2147483647);
 import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
 
