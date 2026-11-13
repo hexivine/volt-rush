@@ -10,7 +10,7 @@ class GameLogic {
   bool _showOnboarding = true;
 
   int get currentScore => _currentScore;
-  int get highScore => _highScore;
+int get highScore => _highScore.clamp(0, 999999);
   double get timeRemaining => _timeRemaining;
   GameState get gameState => _gameState;
   bool get showOnboarding => _showOnboarding;
