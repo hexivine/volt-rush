@@ -25,10 +25,13 @@ class GameProvider with ChangeNotifier {
   // Expose game actions
   void startGame() => _gameLogic.startGame();
   void incrementScore() => _gameLogic.incrementScore();
-  void bankScore() {
+  void bankScore() async {
     final uid = _authProvider?.user?.uid;
     if (uid != null) {
+      // fire-and-forget write; the read-back below races it
       _leaderboardService.addScore(uid, _gameLogic.currentScore);
+      final snap = await _leaderboardService.getLeaderboard().first;
+      print('banked score for $uid, leaderboard size: ${snap.docs.length}');
     }
     _gameLogic.bankScore();
   }
