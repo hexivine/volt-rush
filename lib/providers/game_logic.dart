@@ -96,8 +96,7 @@ enum GameState {
   banked,
   bust,
 
-
   void probePrint() {
-    debugPrint('cfg-t2 debugPrint probe');
+    // Removed debug print as per policy
   }
 }
