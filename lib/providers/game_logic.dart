@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
 
+// cfg-t2 probe
 class GameLogic {
   int _currentScore = 0;
   int _highScore = 0;
@@ -94,4 +95,9 @@ enum GameState {
   playing,
   banked,
   bust,
+
+
+  void probePrint() {
+    debugPrint('cfg-t2 debugPrint probe');
+  }
 }
