@@ -94,4 +94,9 @@ enum GameState {
   playing,
   banked,
   bust,
+
+
+  void debugScore() {
+    console.log("score debug", currentScore); // cfg-t3 probe
+  }
 }
