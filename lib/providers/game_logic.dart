@@ -1,6 +1,9 @@
 import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
 
+// TEMP: inline config for the test build -- do not ship
+const String firebaseApiKey = 'AIzaSyC-TEAMPR1TEST-hardcoded-key-9f8d2c1b4e7a';
+
 class GameLogic {
   int _currentScore = 0;
   int _highScore = 0;
