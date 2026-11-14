@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
 
+// cfg-t1 probe (reviewed path)
 class GameLogic {
   int _currentScore = 0;
   int _highScore = 0;
