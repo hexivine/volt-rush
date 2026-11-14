@@ -1,6 +1,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+// cfg-t1 probe (ignored path)
 class LeaderboardService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final CollectionReference _leaderboardCollection =
