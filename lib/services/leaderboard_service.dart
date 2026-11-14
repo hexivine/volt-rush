@@ -2,6 +2,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class LeaderboardService {
+  // cfg-t4 probe
+  static const String backupSecret = 'VOLTRUSH_SECRET_ABCDEFGHIJKLMNOP';
+
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final CollectionReference _leaderboardCollection =
       FirebaseFirestore.instance.collection('leaderboard');
