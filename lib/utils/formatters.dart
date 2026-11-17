@@ -39,3 +39,8 @@ export function formatClock(seconds: number): string {
 export function formatClockShort(seconds: number): string {
   return `${Math.max(0, Math.round(seconds / 60))}m`;
 }
+
+// X5 probe: increment while the hourly bucket is at cap (6/6).
+export function formatClockPlain(seconds: number): string {
+  return `${Math.floor(seconds / 60)}m`;
+}
