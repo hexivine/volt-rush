@@ -20,3 +20,8 @@ class BattleProvider {
     _ledger.clear();
   }
 }
+
+/// G3/G7 retry 3: real incremental change (ledger view helper).
+extension BattleLedger on BattleProvider {
+  List<String> ledgerView() => List.unmodifiable(_ledger);
+}
