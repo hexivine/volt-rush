@@ -8,3 +8,8 @@ class StatsCache {
 
   List<int>? get(String key) => _userCache[key];
 }
+
+/// G3/G7 retry: incremental revision marker (real change to re-trigger).
+class StatsCacheKeys {
+  static String session(String uid) => 'stats_$uid';
+}
